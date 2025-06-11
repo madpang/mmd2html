@@ -12,6 +12,6 @@ package dev.madpang.ast;
 import java.util.*;
 
 public class Document {
-	public MetaMatter header = new MetaMatter();
-	public List<Section> sections = new ArrayList<>();
+	public MetaMatter metaMatter = new MetaMatter();
+	public List<Section> sectionList = new ArrayList<>();
 }
