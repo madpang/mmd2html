@@ -4,24 +4,30 @@
  * @author: madpang
  * @date:
  * - created on 2025-06-09
- * - updated on 2025-06-09
+ * - updated on 2025-06-14
  */
 
 package dev.madpang;
 
-import java.io.FileInputStream;
+import java.io.FileReader;
+import java.io.BufferedReader;
 import java.util.Scanner;
-import dev.madpang.ast.*;
-import dev.madpang.ast.blocks.*;
+import dev.madpang.ast.MmdDocument;
 
 public class App {
 	public static void main(String[] args) throws Exception {
-		/// Print welcome message
-		System.out.print("MMD to HTML parser started.\n");
-		/// Get post file path
+		/// Argument handling
 		String filePath;
 		if (args.length < 1) {
+			// Interactive mode: prompt for file path
 			try (Scanner scanner = new Scanner(System.in)) {
+				// Print welcome message
+				System.out.println("////////////////////////////////");
+				System.out.println("// MMD to HTML parser started. /");
+				System.out.println("////////////////////////////////");
+				// Debug information
+				System.out.println("Working directory: " + System.getProperty("user.dir"));
+				// Get post file path				
 				System.out.print("Enter path to input file: ");
 				filePath = scanner.nextLine();
 			}
@@ -29,35 +35,13 @@ public class App {
 			filePath = args[0];
 		}
 		/// Parse the file
-		try (FileInputStream in = new java.io.FileInputStream(filePath)) {
-			Document doc = Mmd2AstParser.parse(in);
-			printAST(doc);
-		}
-	}
-
-	private static void printAST(Document doc) {
-		System.out.println("=== MetaMatter ===");
-		System.out.println("file: " + doc.metaMatter.file);
-		System.out.println("brief: " + doc.metaMatter.brief);
-		System.out.println("title: " + doc.metaMatter.title);
-		System.out.println("author: " + doc.metaMatter.author);
-		System.out.println("date: " + doc.metaMatter.date);
-		System.out.println("version: " + doc.metaMatter.version);
-		System.out.println();
-		System.out.println("=== Sections ===");
-		for (Section sec : doc.sectionList) {
-			System.out.println("# " + sec.heading.text);
-			for (SemanticParagraph para : sec.paragraphs) {
-				for (IBlock block : para.blocks) {
-					if (block instanceof RawTextBlock) {
-						System.out.println(((RawTextBlock) block).text);
-					} else {
-						System.out.println(block);
-					}
-				}
-				System.out.println();
-			}
-			System.out.println("----------------");
+		try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
+			MmdDocument doc = MmdDocument.parse(reader);
+			// Print the AST
+			doc.header.print();
+		} catch (Exception e) {
+			System.err.println("Error parsing file: " + e.getMessage());
+			e.printStackTrace();
 		}
 	}
 }
