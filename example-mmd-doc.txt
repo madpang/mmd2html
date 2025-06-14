@@ -1,0 +1,20 @@
++++ header
+@file: example-mmd-doc.txt
+@brief: A blank article serving as a boilerplate.
+@title: A wonderful article
+@author: madpang
+@date:
+- created on 2025-05-11
+- updated on 2025-05-17
+@version: 0.1.0
++++
+
+# First Level Header
+
+## Second Level Header
+
+### Third Level Header
+
+=== Fuzzy major heading
+
+--- Fuzzy minor heading
