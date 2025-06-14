@@ -5,6 +5,9 @@
 tmp*
 .DS_Store
 
+# Compiled class file
+*.class
+
 # Ignore Gradle project-specific cache directory
 .gradle
 
