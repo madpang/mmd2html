@@ -9,11 +9,13 @@
 @version: 0.1.0
 +++
 
-# First Level Header
+# First Level Heading
 
-## Second Level Header
+A post article MUST have one and only one first level Heading.
 
-### Third Level Header
+## Second Level Heading
+
+### Third Level Heading
 
 === Fuzzy major heading
 

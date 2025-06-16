@@ -52,7 +52,7 @@ public class MmdHeader {
 				throw new IOException("First line must be '+++ header'");
 			}
 			// Start parsing the header block
-			Boolean inHeader = true;
+			boolean inHeader = true;
 			Pattern metaPattern = Pattern.compile("^@([a-z]+):(.*)$");
 			Matcher metaMatcher;
 			String metaLine;
@@ -153,7 +153,7 @@ public class MmdHeader {
 			"date-created", "date-updated", "version"
 		};
 		// Check if all required fields are present
-		Boolean isValid = true;
+		boolean isValid = true;
 		for (String field : requiredFields) {
 			if (!metaInfo.containsKey(field)) {
 				isValid = false; // Validation failed

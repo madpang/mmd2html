@@ -4,7 +4,7 @@
  * @author: madpang
  * @date:
  * - created on 2025-06-09
- * - updated on 2025-06-13
+ * - updated on 2025-06-17
  */
 
 package dev.madpang.ast;
@@ -30,14 +30,21 @@ public class MmdDocument {
 		MmdDocument doc = new MmdDocument();
 		try {
 			// If firstLine is not provided, read the first line from the reader
-			String headerLine = (firstLine != null) ? firstLine : reader.readLine();
-			if (headerLine == null || !headerLine.equals("+++ header")) {
-				throw new IOException("MMD DOC MUST PROVIDE A HEADER BLOCK, STARTING WITH '+++ header'");
+			String nextLine = (firstLine != null) ? firstLine : reader.readLine();
+			if (nextLine == null || !nextLine.equals("+++ header")) {
+				throw new IOException("MMD DOC MUST PROVIDE A <HEADER>, STARTING WITH '+++ header'");
 			}
 			// Delegate parsing of the header to MmdHeader
-			doc.header = MmdHeader.parse(reader, headerLine);
-			// After the header parsing, continue delegating to MmdBody
-			doc.body = MmdBody.parse(reader);
+			doc.header = MmdHeader.parse(reader, nextLine);
+			// After parsing the header, skip potential empty lines
+			while ((nextLine = reader.readLine()) != null && nextLine.trim().isEmpty()) {
+				// Skip empty lines
+			}
+			if (nextLine == null || !nextLine.startsWith("# ")) {
+				throw new IOException("MMD DOC MUST HAVE A <BODY>, STARTING WITH A LEVEL-1 HEADING, e.g. '# My Heading')");
+			}
+			// Delegate parsing of the body to MmdBody
+			doc.body = MmdBody.parse(reader, nextLine);
 		} catch (IOException e) {
 			throw e; // Re-throw the original exception
 		}

@@ -30,7 +30,7 @@ Can you revise the code to orient to this direction?
 
 {H1, H2, H2, ...}
 
-but note, {H1, div, H4, H3, H2, H2 ...} is also valid. 
+but note, {H1, div, H4, H3, H2, H2 ...} is ~~also valid~~.
 
 {H2, H3, H3, ...}
 
