@@ -49,12 +49,12 @@ public class MmdHeader {
 	public static MmdHeader parse(BufferedReader reader, String firstLine) throws IOException {
 		MmdHeader header = new MmdHeader();
 		try {
-			// If firstLine is not provided, read the first line from the reader
+			// [1] If firstLine is not provided, read the first line from the reader
 			String headerLine = (firstLine != null) ? firstLine : reader.readLine();
 			if (headerLine == null || !headerLine.equals("+++ header")) {
 				throw new IOException("First line must be '+++ header'");
 			}
-			// Start parsing the header block
+			// [2] Start parsing the header block
 			boolean inHeader = true;
 			Pattern metaPattern = Pattern.compile("^@([a-z]+):(.*)$");
 			Matcher metaMatcher;
@@ -115,7 +115,7 @@ public class MmdHeader {
 			if (inHeader) {
 				throw new IOException("Header block is not closed properly, expecting '+++' to end the header.");
 			}
-			// Perform self-validation to ensure all required fields are present
+			// [3] Perform self-validation to ensure all required fields are present
 			if (!header.selfValidation()) {
 				throw new IOException("Header is missing required fields.");
 			}			
@@ -158,7 +158,7 @@ public class MmdHeader {
 		// Check if all required fields are present
 		boolean isValid = true;
 		for (String field : requiredFields) {
-			if (!metaInfo.containsKey(field)) {
+			if (!metaInfo.containsKey(field) || metaInfo.get(field).isEmpty()) {
 				isValid = false; // Validation failed
 				break;
 			}

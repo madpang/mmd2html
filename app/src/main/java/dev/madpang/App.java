@@ -39,6 +39,7 @@ public class App {
 			MmdDocument doc = MmdDocument.parse(reader);
 			// Print the AST
 			doc.header.print();
+			doc.body.print();
 		} catch (Exception e) {
 			System.err.println("Error parsing file: " + e.getMessage());
 			e.printStackTrace();

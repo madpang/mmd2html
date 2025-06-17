@@ -9,9 +9,12 @@
 
 package dev.madpang.ast;
 
-import java.util.*;
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.regex.Pattern;
+import java.util.regex.Matcher;
 	
 public class MmdSection {
 	public int level;
@@ -41,12 +44,42 @@ public class MmdSection {
 	 * | More content here...                                         |
 	 * |                                                              |
 	 * ----------------------------------------------------------------
+     *   |
+	 *   V
+	 *  1st column, start with no space before '#'
 	 */
 	public static MmdSection parse(BufferedReader reader, String firstLine) throws IOException {
 		MmdSection section = new MmdSection();
-		System.out.println("Parsing MmdSection...");
-		System.out.println("First non-empty line: " + firstLine);
-		// section.sections = MmdSection.parseSections(reader);
+		try {
+			// [1] If firstLine is not provided, read the first line from the reader
+			String headingLine = (firstLine != null) ? firstLine : reader.readLine();
+			if (headingLine == null || headingLine.trim().isEmpty()) {
+				throw new IOException("MMD section must start with a heading line.");
+			}
+			// [2] Parse the heading line
+			Pattern headingPattern = Pattern.compile("^(#{1,3}) (\\S.*)$");
+			Matcher headingMatcher = headingPattern.matcher(headingLine);
+			if (!headingMatcher.matches()) {
+				throw new IOException("MMD section heading must start with '#', '##', or '###'.");
+			}
+			section.level = headingMatcher.group(1).length(); // Level-1, 2, or 3 heading
+			section.heading = headingMatcher.group(2).trim(); // Get the heading text
+			// [3] @todo: Parse paragraphs and subsections
+		} catch (IOException e) {
+			throw e; // Re-throw the original exception
+		}
 		return section;
+	}
+
+	/**
+	 * @brief: A print method to display the section's content.
+	 */
+	public void print() {
+		System.out.println("---     MMD Section Block   ---");
+		System.out.println("Section Level: " + level);
+		System.out.println("Heading: " + heading);
+		System.out.println("Paragraphs: " + paragraphs.size());
+		System.out.println("Subsections: " + subsections.size());
+		System.out.println("--------------------------------");
 	}
 }

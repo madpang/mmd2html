@@ -29,21 +29,21 @@ public class MmdDocument {
 	public static MmdDocument parse(BufferedReader reader, String firstLine) throws IOException {
 		MmdDocument doc = new MmdDocument();
 		try {
-			// If firstLine is not provided, read the first line from the reader
+			// [1] If firstLine is not provided, read the first line from the reader
 			String nextLine = (firstLine != null) ? firstLine : reader.readLine();
 			if (nextLine == null || !nextLine.equals("+++ header")) {
 				throw new IOException("MMD DOC MUST PROVIDE A <HEADER>, STARTING WITH '+++ header'");
 			}
-			// Delegate parsing of the header to MmdHeader
+			// [2] Delegate parsing of the header to MmdHeader
 			doc.header = MmdHeader.parse(reader, nextLine);
-			// After parsing the header, skip potential empty lines
+			// [3] After parsing the header, skip potential empty lines
 			while ((nextLine = reader.readLine()) != null && nextLine.trim().isEmpty()) {
 				// Skip empty lines
 			}
 			if (nextLine == null || !nextLine.startsWith("# ")) {
 				throw new IOException("MMD DOC MUST HAVE A <BODY>, STARTING WITH A LEVEL-1 HEADING, e.g. '# My Heading')");
 			}
-			// Delegate parsing of the body to MmdSection
+			// [4] Delegate parsing of the body to MmdSection
 			doc.body = MmdSection.parse(reader, nextLine);
 		} catch (IOException e) {
 			throw e; // Re-throw the original exception
