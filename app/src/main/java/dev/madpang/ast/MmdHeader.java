@@ -25,18 +25,21 @@ public class MmdHeader {
 	 * A real MMD header block looks like
 	 * ----------------------------------------------------------------
 	 * |                                                              |
-	 * | +++ header 											      |
-	 * | @file: blank-article.txt 								      |
-	 * | @brief: A blank article serving as a boilerplate.		      |
-	 * | @title: A wonderful article								  |
-	 * | @author: madpang 										      |
-	 * | @date 													      |
-	 * | - created on 2025-05-11 								      |
-	 * | - updated on 2025-05-17 								      |
-	 * | @version: 0.1.0 										      |
-	 * | +++ 													      |
-	 * |															  |
+	 * | +++ header                                                   | <- 1st line
+	 * | @file: blank-article.txt                                     |
+	 * | @brief: A blank article serving as a boilerplate.            |
+	 * | @title: A wonderful article                                  |
+	 * | @author: madpang                                             |
+	 * | @date                                                        |
+	 * | - created on 2025-05-11                                      |
+	 * | - updated on 2025-05-17                                      |
+	 * | @version: 0.1.0                                              |
+	 * | +++                                                          |
+	 * |                                                              |
 	 * ----------------------------------------------------------------
+	 *   |
+	 *   V
+	 *  1st column, start with no space before '@'
 	 */
 	public Map<String, String> metaInfo = new HashMap<>();
 

@@ -4,7 +4,7 @@
  * @author: madpang
  * @date:
  * - created on 2025-06-09
- * - updated on 2025-06-17
+ * - updated on 2025-06-18
  */
 
 package dev.madpang.ast;
@@ -14,7 +14,7 @@ import java.io.IOException;
 
 public class MmdDocument {
 	public MmdHeader header = new MmdHeader();
-	public MmdBody body = new MmdBody();
+	public MmdSection body = new MmdSection(); // root section (level-1) of the body
 
 	/**
 	 * @brief: Parses a MmdDocument from a BufferedReader, with an optional first line being supplied.
@@ -43,8 +43,8 @@ public class MmdDocument {
 			if (nextLine == null || !nextLine.startsWith("# ")) {
 				throw new IOException("MMD DOC MUST HAVE A <BODY>, STARTING WITH A LEVEL-1 HEADING, e.g. '# My Heading')");
 			}
-			// Delegate parsing of the body to MmdBody
-			doc.body = MmdBody.parse(reader, nextLine);
+			// Delegate parsing of the body to MmdSection
+			doc.body = MmdSection.parse(reader, nextLine);
 		} catch (IOException e) {
 			throw e; // Re-throw the original exception
 		}

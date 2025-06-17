@@ -1,52 +1,52 @@
 /**
- * @file: Section.java
- * @brief: Represents a section in the document.
+ * @file: MmdSection.java
+ * @brief: Represents a section in the MMD document.
  * @author: madpang
  * @date:
  * - created on 2025-06-09
- * - updated on 2025-06-09
+ * - updated on 2025-06-18
  */
 
 package dev.madpang.ast;
 
+import java.util.*;
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.util.*;
-
+	
 public class MmdSection {
-	public Heading heading;
-	public List<SemanticParagraph> paragraphs = new ArrayList<>();
-
-	public MmdSection(Heading heading) {
-		this.heading = heading;
-	}
+	public int level;
+	public String heading;
+	public List<SemanticParagraph> paragraphs = new ArrayList<>(); // can be empty
+	public List<MmdSection> subsections = new ArrayList<>();       // can be empty
 
 	/**
-	 * Parses all sections from the reader until EOF.
+	 * @note:
+	 * A MMD doc must have a "body" of main content, which is enclosed by one and only one level-1 heading (e.g. "# My Heading") and may optionally contain multiple subheadings (level-2, level-3, etc.).
+	 *
+	 * @details:
+	 * A real MMD "body" looks like
+	 * ----------------------------------------------------------------
+	 * |                                                              |
+	 * | # The ONE AND ONLY Level-1 Heading                           | <- 1st line
+	 * |                                                              |
+	 * | Some optional content here...                                |
+	 * | NOTE, this forms an *anonymous* section.                     |
+	 * |                                                              |
+	 * | ## Level 2 heading (optional)                                |
+	 * |                                                              |
+	 * | Some content here...                                         |
+	 * |                                                              |
+	 * | ### Level 3 heading (optional)                               |
+	 * |                                                              |
+	 * | More content here...                                         |
+	 * |                                                              |
+	 * ----------------------------------------------------------------
 	 */
-	public static List<MmdSection> parseSections(BufferedReader reader) throws IOException {
-		List<MmdSection> sectionList = new ArrayList<>();
-		String line;
-		MmdSection currentSection = null;
-		while ((line = reader.readLine()) != null) {
-			if (line.startsWith("# ")) {
-				if (currentSection != null) {
-					sectionList.add(currentSection);
-				}
-				Heading heading = new Heading(1, line.substring(2).trim());
-				currentSection = new MmdSection(heading);
-			} else {
-				if (currentSection != null) {
-					if (currentSection.paragraphs.isEmpty()) {
-						currentSection.paragraphs.add(new SemanticParagraph());
-					}
-					currentSection.paragraphs.get(0).blocks.add(new dev.madpang.ast.blocks.RawTextBlock(line));
-				}
-			}
-		}
-		if (currentSection != null) {
-			sectionList.add(currentSection);
-		}
-		return sectionList;
+	public static MmdSection parse(BufferedReader reader, String firstLine) throws IOException {
+		MmdSection section = new MmdSection();
+		System.out.println("Parsing MmdSection...");
+		System.out.println("First non-empty line: " + firstLine);
+		// section.sections = MmdSection.parseSections(reader);
+		return section;
 	}
 }
