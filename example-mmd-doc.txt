@@ -12,10 +12,22 @@
 # First Level Heading
 
 A post article MUST have one and only one first level Heading.
+And optionally, it can have multiple sections.
 
 ## Second Level Heading
 
+A section is a part of the article that can have its own headings.
+It can also have further subsections.
+
+Semantic paragraphs are separated by a blank line.
+
 ### Third Level Heading
+
+This is a 3rd level subsection.
+
+## Another 2nd Level Heading
+
+This section is be the member of the first level section.
 
 === Fuzzy major heading
 

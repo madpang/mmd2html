@@ -4,7 +4,7 @@
  * @author: madpang
  * @date:
  * - created on 2025-06-09
- * - updated on 2025-06-20
+ * - updated on 2025-06-21
  */
 
 package dev.madpang.ast;
@@ -15,16 +15,18 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
-	
+
 public class MmdSection {
-	public int level;
-	public String heading;
-	public List<SemanticParagraph> paragraphs = new ArrayList<>(); // can be empty
-	public List<MmdSection> subsections = new ArrayList<>();       // can be empty
+	public int sectionLevel;
+	public String headLine;
+	public List<SemanticParagraph> sParagraphs = new ArrayList<>(); // can be empty
+	public List<MmdSection> subSections = new ArrayList<>();        // can be empty
+	public String terminalLine; // the line that terminates this section
 
 	/**
 	 * @note:
 	 * A MMD doc must have a "body" of main content, which is enclosed by one and only one level-1 heading (e.g. "# My Heading") and may optionally contain multiple subheadings (level-2, level-3, etc.).
+	 * Semantic paragraphs always come BEFORE any sub-sections, and they are separated by blank lines.
 	 *
 	 * @details:
 	 * A real MMD "body" looks like
@@ -62,37 +64,40 @@ public class MmdSection {
 			if (!headingMatcher.matches()) {
 				throw new IOException("MMD section heading must start with '#', '##', or '###'.");
 			}
-			section.level = headingMatcher.group(1).length(); // Level-1, 2, or 3 heading
-			section.heading = headingMatcher.group(2).trim(); // Get the heading text
+			section.sectionLevel = headingMatcher.group(1).length(); // Level-1, 2, or 3 heading
+			section.headLine = headingMatcher.group(2).trim(); // Get the heading text
 			// [3] Parse paragraphs and subsections
-			while ((currentLine = reader.readLine()) != null) {
+			currentLine = reader.readLine(); // Read the next line
+			while(currentLine != null) {
+				// Skip empty lines
 				if (currentLine.trim().isEmpty()) {
-					continue; // Skip empty lines
+					currentLine = reader.readLine();
+					continue;
 				}
-				// Check if the line is a subsection heading
+				// Delegate parsing to semantic paragraphs UNTIL a new heading is found
 				Matcher subheadingMatcher = headingPattern.matcher(currentLine);
-				if (subheadingMatcher.matches()) {
-					int nextLevel = subheadingMatcher.group(1).length();
-					if (nextLevel > section.level) {
-						// It's a subsection, parse it recursively
-						MmdSection subsection = MmdSection.parse(reader, currentLine);
-						section.subsections.add(subsection);
-						continue;
-					} else {
-						// The next heading belongs to a higher-level or sibling section, so stop here and let the parent handle it
-						// Push back the line for the parent to read
-						// @todo: You may need a PushbackReader or a custom wrapper to support this
-						break; // Stop processing this section		
-					}
+				if (!subheadingMatcher.matches()) {
+					// @note: SemanticParagraphs will automatically hand back the control to this section, to safely parse the next semantic paragraph or go forward for subsections.
+					section.sParagraphs.add(SemanticParagraph.parse(reader, currentLine));
+					currentLine = reader.readLine(); // Read the next line
+					continue;
 				}
-				// Otherwise, it's a semantic paragraph of  the current section
-				// @todo: adjust the order, and still needs a loop
-				SemanticParagraph paragraph = SemanticParagraph.parse(reader, currentLine);
-				section.paragraphs.add(paragraph);
+				// If subsection heading is found, parse it recursively
+				int nextLevel = subheadingMatcher.group(1).length();
+				if (nextLevel > section.sectionLevel) {
+					section.subSections.add(MmdSection.parse(reader, currentLine));
+					// If there already some children sub-sections exist, set current line to the last one's terminalLine; only try read new line when the children list is empty
+					currentLine = section.subSections.isEmpty() ? reader.readLine() : section.subSections.get(section.subSections.size() - 1).terminalLine;
+					continue;
+				}
+				// If same/higher-level heading is found, mark the terminal line and hand back the control to the parent section
+				section.terminalLine = currentLine;
+				break;
 			}
 		} catch (IOException e) {
 			throw e; // Re-throw the original exception
 		}
+		section.print(); // Debug print
 		return section;
 	}
 
@@ -101,10 +106,11 @@ public class MmdSection {
 	 */
 	public void print() {
 		System.out.println("---     MMD Section Block   ---");
-		System.out.println("Section Level: " + level);
-		System.out.println("Heading: " + heading);
-		System.out.println("Paragraphs: " + paragraphs.size());
-		System.out.println("Subsections: " + subsections.size());
+		System.out.println("Section Level: " + sectionLevel);
+		System.out.println("Heading: " + headLine);
+		System.out.println("Paragraphs: " + sParagraphs.size());
+		System.out.println("Subsections: " + subSections.size());
+		System.out.println("Terminal Line: " + (terminalLine == null ? "EOF" : terminalLine));
 		System.out.println("--------------------------------");
 	}
 }
