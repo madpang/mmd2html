@@ -4,18 +4,18 @@
  * @author: madpang
  * @date:
  * - created on 2025-06-09
- * - updated on 2025-06-19
+ * - updated on 2025-06-21
  */
 
 package dev.madpang.ast;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-
-import dev.madpang.ast.blocks.RawTextBlock;
+import java.util.List;
+import java.util.ArrayList;
 
 public class SemanticParagraph {
-	public RawTextBlock block = new RawTextBlock();
+	public List<String> rawLines = new ArrayList<>();
 	
 	/**
 	 * @note:
@@ -28,18 +28,25 @@ public class SemanticParagraph {
 	 * 
 	 * @todo:
 	 * This class should hold a list of blocks, which can be of different types.
-	 * But currently, it only holds a RawTextBlock.
+	 * But currently, it only holds lines of raw text.
 	 *
 	 */
 	public static SemanticParagraph parse(BufferedReader reader, String firstLine) throws IOException {
 		SemanticParagraph sp = new SemanticParagraph();
 		try {
-			String currenLine = (firstLine != null) ? firstLine : reader.readLine();
-			if (currenLine == null || currenLine.trim().isEmpty()) {
+			String currentLine = (firstLine != null) ? firstLine : reader.readLine();
+			if (currentLine == null || currentLine.trim().isEmpty()) {
 				throw new IOException("MMD semantic paragraph must start with a non-empty line.");
 			}
-			/// @todo: Determine the block type delegate the parsing
-			sp.block = RawTextBlock.parse(reader, currenLine);
+			// [1] Collect the first line
+			sp.rawLines.add(currentLine);
+			// [2] Collect lines until an empty line or EOF is found
+			while ((currentLine = reader.readLine()) != null) {
+				if (currentLine.trim().isEmpty()) {
+					break;
+				}
+				sp.rawLines.add(currentLine);
+			}
 		} catch (IOException e) {
 			throw e; // Re-throw the original exception
 		}

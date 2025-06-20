@@ -51,6 +51,7 @@ public class MmdSection {
 	 *  1st column, start with no space before '#'
 	 */
 	public static MmdSection parse(BufferedReader reader, String firstLine) throws IOException {
+		System.out.println("[DEBUG] Entering MmdSection.parse, firstLine: " + firstLine);
 		MmdSection section = new MmdSection();
 		try {
 			// [1] If firstLine is not provided, read the first line from the reader
@@ -64,8 +65,9 @@ public class MmdSection {
 			if (!headingMatcher.matches()) {
 				throw new IOException("MMD section heading must start with '#', '##', or '###'.");
 			}
-			section.sectionLevel = headingMatcher.group(1).length(); // Level-1, 2, or 3 heading
-			section.headLine = headingMatcher.group(2).trim(); // Get the heading text
+			section.sectionLevel = headingMatcher.group(1).length();
+			section.headLine = headingMatcher.group(2).trim();
+			System.out.println("[DEBUG] Parsed heading: '" + section.headLine + "' (level " + section.sectionLevel + ")");
 			// [3] Parse paragraphs and subsections
 			currentLine = reader.readLine(); // Read the next line
 			while(currentLine != null) {
@@ -77,7 +79,7 @@ public class MmdSection {
 				// Delegate parsing to semantic paragraphs UNTIL a new heading is found
 				Matcher subheadingMatcher = headingPattern.matcher(currentLine);
 				if (!subheadingMatcher.matches()) {
-					// @note: SemanticParagraphs will automatically hand back the control to this section, to safely parse the next semantic paragraph or go forward for subsections.
+					System.out.println("[DEBUG] Parsing semantic paragraph at line: " + currentLine);
 					section.sParagraphs.add(SemanticParagraph.parse(reader, currentLine));
 					currentLine = reader.readLine(); // Read the next line
 					continue;
@@ -85,6 +87,7 @@ public class MmdSection {
 				// If subsection heading is found, parse it recursively
 				int nextLevel = subheadingMatcher.group(1).length();
 				if (nextLevel > section.sectionLevel) {
+					System.out.println("[DEBUG] Parsing subsection: " + currentLine);
 					section.subSections.add(MmdSection.parse(reader, currentLine));
 					// If there already some children sub-sections exist, set current line to the last one's terminalLine; only try read new line when the children list is empty
 					currentLine = section.subSections.isEmpty() ? reader.readLine() : section.subSections.get(section.subSections.size() - 1).terminalLine;
@@ -92,6 +95,7 @@ public class MmdSection {
 				}
 				// If same/higher-level heading is found, mark the terminal line and hand back the control to the parent section
 				section.terminalLine = currentLine;
+				System.out.println("[DEBUG] Terminal line encountered: " + currentLine + " (returning to parent)");
 				break;
 			}
 		} catch (IOException e) {
