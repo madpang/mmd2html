@@ -38,7 +38,7 @@ public class MmdHeader {
 	 * |                                                              |
 	 * ----------------------------------------------------------------
 	 *   |
-	 *   V
+	 *   v
 	 *  1st column, start with no space before '@'
 	 */
 	public Map<String, String> metaInfo = new HashMap<>();
@@ -50,8 +50,8 @@ public class MmdHeader {
 		MmdHeader header = new MmdHeader();
 		try {
 			// [1] If firstLine is not provided, read the first line from the reader
-			String headerLine = (firstLine != null) ? firstLine : reader.readLine();
-			if (headerLine == null || !headerLine.equals("+++ header")) {
+			String currentLine = (firstLine != null) ? firstLine : reader.readLine();
+			if (currentLine == null || !currentLine.equals("+++ header")) {
 				throw new IOException("First line must be '+++ header'");
 			}
 			// [2] Start parsing the header block

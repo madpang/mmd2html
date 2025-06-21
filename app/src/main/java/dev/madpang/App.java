@@ -38,8 +38,8 @@ public class App {
 		try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
 			MmdDocument doc = MmdDocument.parse(reader);
 			// Print the AST
-			doc.header.print();
-			// doc.body.print();
+			doc.frontMatter.print();
+			doc.bodyContent.print();
 		} catch (Exception e) {
 			System.err.println("Error parsing file: " + e.getMessage());
 			e.printStackTrace();
