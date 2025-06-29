@@ -4,7 +4,7 @@
  * @author: madpang
  * @date:
  * - created on 2025-06-09
- * - updated on 2025-06-28
+ * - updated on 2025-06-29
  */
 
 package dev.madpang.ast;
@@ -18,7 +18,7 @@ import dev.madpang.util.CommonUtil;
 
 public class SemanticParagraph {
 	public List<String> rawLines = new ArrayList<>();
-	
+
 	/**
 	 * @note:
 	 * A SemanticParagraph is a collection of blocks that may represent various types of content, such as normal paragraphs, code blocks, lists, equations, etc.
@@ -65,9 +65,11 @@ public class SemanticParagraph {
 		List<String> htmlLines = new ArrayList<>();
 		try {
 			htmlLines.add("<s-paragraph>");
+			htmlLines.add("<pre>"); // @todo: this is a temporary solution
 			for (String line : rawLines) {
 				htmlLines.add(CommonUtil.escapeHTML(line));
 			}
+			htmlLines.add("</pre>");
 			htmlLines.add("</s-paragraph>");
 		} catch (IOException e) {
 			throw e;

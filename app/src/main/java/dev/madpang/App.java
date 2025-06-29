@@ -4,7 +4,7 @@
  * @author: madpang
  * @date:
  * - created on 2025-06-09
- * - updated on 2025-06-14
+ * - updated on 2025-06-29
  */
 
 package dev.madpang;
@@ -37,9 +37,8 @@ public class App {
 		/// Parse the file
 		try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
 			MmdDocument doc = MmdDocument.parse(reader);
-			// Print the AST
-			doc.frontMatter.print();
-			doc.bodyContent.print();
+			// Convert to HTML and print
+			doc.toHTML().forEach(System.out::println);
 		} catch (Exception e) {
 			System.err.println("Error parsing file: " + e.getMessage());
 			e.printStackTrace();

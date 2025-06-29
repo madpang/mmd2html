@@ -61,6 +61,8 @@ public class MmdDocument {
 		return parse(reader, null);
 	}
 
+	/// @todo: Add an overloaded `parse` method that takes a file path as input
+
 	/**
 	 * Converts the MMD document to HTML.
 	 */
@@ -75,4 +77,6 @@ public class MmdDocument {
 		}
 		return htmlLines;
 	}
+
+	/// @todo: Add an overloaded `toHTML` method that takes a file path as input
 }
