@@ -4,7 +4,7 @@
  * @author: madpang
  * @date:
  * - created on 2025-06-09
- * - updated on 2025-06-21
+ * - updated on 2025-06-29
  */
 
 package dev.madpang.ast;
@@ -15,6 +15,8 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
+
+import dev.madpang.util.CommonUtil;
 
 public class MmdSection {
 	public int sectionLevel;
@@ -46,7 +48,7 @@ public class MmdSection {
 	 * | More content here...                                         |
 	 * |                                                              |
 	 * ----------------------------------------------------------------
-     *   |
+	 *   |
 	 *   v
 	 *  1st column, start with no space before '#'
 	 */
@@ -97,6 +99,28 @@ public class MmdSection {
 			throw e; // Re-throw the original exception
 		}
 		return section;
+	}
+
+	/**
+	 * Converts this section to HTML.
+	 */
+	public List<String> toHTML() throws IOException {
+		List<String> htmlLines = new ArrayList<>();
+		try {
+			// Write the section heading
+			htmlLines.add(String.format("<h%d>%s</h%d>", sectionLevel, CommonUtil.escapeHTML(headLine), sectionLevel));
+			// Write paragraphs
+			for (SemanticParagraph para : sParagraphs) {
+				htmlLines.addAll(para.toHTML());
+			}
+			// Write subsections recursively
+			for (MmdSection sub : subSections) {
+				htmlLines.addAll(sub.toHTML());
+			}
+		} catch (IOException e) {
+			throw e; // Re-throw the original exception
+		}
+		return htmlLines;
 	}
 
 	/**

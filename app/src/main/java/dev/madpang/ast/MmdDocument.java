@@ -11,6 +11,8 @@ package dev.madpang.ast;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.util.List;
+import java.util.ArrayList;
 
 public class MmdDocument {
 	public MmdHeader frontMatter = new MmdHeader();
@@ -24,7 +26,7 @@ public class MmdDocument {
 	 * @return: A MmdDocument object containing the parsed header and body.
 	 * @throws: IOException If an I/O error occurs while reading the document.
 	 * 
-	 * @details: The second argument `firstLine` is useful to allow the caller set a hook by knowing start of parsing.
+	 * @details: The second argument `firstLine` is useful to allow the caller to set some sort of "hook".
 	 */
 	public static MmdDocument parse(BufferedReader reader, String firstLine) throws IOException {
 		MmdDocument doc = new MmdDocument();
@@ -57,5 +59,20 @@ public class MmdDocument {
 	 */
 	public static MmdDocument parse(BufferedReader reader) throws IOException {
 		return parse(reader, null);
+	}
+
+	/**
+	 * Converts the MMD document to HTML.
+	 */
+	public List<String> toHTML() throws IOException {
+		List<String> htmlLines = new ArrayList<>();
+		try {
+			// @todo:handle the header info.
+			// Write the body content
+			htmlLines.addAll(bodyContent.toHTML());
+		} catch (IOException e) {
+			throw e; // Re-throw the original exception
+		}
+		return htmlLines;
 	}
 }

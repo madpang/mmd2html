@@ -1,4 +1,15 @@
+/**
+ * @file: CommonUtil.java
+ * @brief: Utility class for the MMD to HTML conversion.
+ * @author: madpang
+ * @date:
+ * - created on 2025-06-29
+ * - updated on 2025-06-29
+ */
+
 package dev.madpang.util;
+
+import java.io.IOException;
 
 /**
  * Utility class for parsing and conversion operations.

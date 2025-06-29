@@ -9,12 +9,12 @@
 
 package dev.madpang.ast;
 
-import dev.madpang.util.CommonUtil;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.List;
 import java.util.ArrayList;
+
+import dev.madpang.util.CommonUtil;
 
 public class SemanticParagraph {
 	public List<String> rawLines = new ArrayList<>();
