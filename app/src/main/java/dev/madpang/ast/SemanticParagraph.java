@@ -4,10 +4,12 @@
  * @author: madpang
  * @date:
  * - created on 2025-06-09
- * - updated on 2025-06-21
+ * - updated on 2025-06-28
  */
 
 package dev.madpang.ast;
+
+import dev.madpang.util.CommonUtil;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -51,5 +53,25 @@ public class SemanticParagraph {
 			throw e; // Re-throw the original exception
 		}
 		return sp;
+	}
+
+	/**
+	 * Converts this semantic paragraph to HTML.
+	 */
+	public List<String> toHTML() throws IOException {
+		if (rawLines.isEmpty()) {
+			throw new IOException("SemanticParagraph contains no lines to convert to HTML.");
+		}
+		List<String> htmlLines = new ArrayList<>();
+		try {
+			htmlLines.add("<s-paragraph>");
+			for (String line : rawLines) {
+				htmlLines.add(CommonUtil.escapeHTML(line));
+			}
+			htmlLines.add("</s-paragraph>");
+		} catch (IOException e) {
+			throw e;
+		}
+		return htmlLines;
 	}
 }
