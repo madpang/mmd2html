@@ -51,8 +51,9 @@ The relation between <p> and <s-para>
 
 For the interactive execution
 ```
-java -cp app/build/classes/java/main dev.madpang.App
+java -cp app/build/classes/java/main MmdConverter
 # Then supply the path to the file, e.g. `example-mmd-doc.txt`
+# Note, `-cp` is the classpath option, which tells Java where to find the compiled classes.
 ```
 Note, the working directory is where you run the command.
 
