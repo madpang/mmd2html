@@ -2,13 +2,18 @@
  * @file: MmdDocument.java
  * @brief: Represents the entire mmd-markup document structure, including the header and body.
  * @author: madpang
+ * @details:
+ * This class is the overarching structure for this mmd-to-html converter, it parses the mmd document into AST nodes, and reconstructs the HTML from the AST representation.
  * @date:
  * - created on 2025-06-09
- * - updated on 2025-06-18
+ * - updated on 2025-07-01
  */
 
 package dev.madpang.ast;
 
+import java.io.FileWriter;
+import java.io.BufferedWriter;
+import java.io.FileReader;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.List;
@@ -21,8 +26,8 @@ public class MmdDocument {
 	/**
 	 * @brief: Parses a MmdDocument from a BufferedReader, with an optional first line being supplied.
 	 *
-	 * @param[in]: reader The BufferedReader to read the document from.
-	 * @param[in]: firstLine The first line, or null to read from the reader.
+	 * @param[in]: reader -- The BufferedReader to read the document from.
+	 * @param[in]: firstLine -- The first line, or null to read from the reader.
 	 * @return: A MmdDocument object containing the parsed header and body.
 	 * @throws: IOException If an I/O error occurs while reading the document.
 	 * 
@@ -61,10 +66,21 @@ public class MmdDocument {
 		return parse(reader, null);
 	}
 
-	/// @todo: Add an overloaded `parse` method that takes a file path as input
+	/**
+	 * @brief: An overloaded `parse` method that takes a file path as input.
+	 * 
+	 * @param[in]: filePath -- The path to the MMD file to parse.
+	 */
+	public static MmdDocument parse(String filePath) throws IOException {
+		try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
+			return parse(reader);
+		}
+	}
 
 	/**
 	 * Converts the MMD document to HTML.
+	 * @return: A list of strings representing the HTML lines.
+	 * @throws: IOException If an I/O error occurs while converting to HTML.
 	 */
 	public List<String> toHTML() throws IOException {
 		List<String> htmlLines = new ArrayList<>();
@@ -78,5 +94,19 @@ public class MmdDocument {
 		return htmlLines;
 	}
 
-	/// @todo: Add an overloaded `toHTML` method that takes a file path as input
+	/**
+	 * @brief: An overloaded `toHTML` method that writes HTML output directly to a file.
+	 * 
+	 * @param[in]: filePath -- The path to the output HTML file.
+	 */
+	public void toHTML(String filePath) throws IOException {
+		try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
+			// Write the body content
+			List<String> htmlLines = bodyContent.toHTML();
+			for (String line : htmlLines) {
+				writer.write(line);
+				writer.newLine();
+			}
+		}
+	}
 }
