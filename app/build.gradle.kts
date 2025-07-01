@@ -37,6 +37,15 @@ application {
     mainClass = "MmdConverter"
 }
 
+tasks.named<Jar>("jar") {
+    archiveBaseName = "mmd2html"
+    manifest {
+        attributes(
+            "Main-Class" to "MmdConverter"
+        )
+    }
+}
+
 // tasks.named<Test>("test") {
 //     // Use JUnit Platform for unit tests.
 //     useJUnitPlatform()
