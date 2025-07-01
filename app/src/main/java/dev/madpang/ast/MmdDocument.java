@@ -49,7 +49,7 @@ public class MmdDocument {
 				continue;
 			}
 			if (currentLine == null || !currentLine.startsWith("# ")) {
-				throw new IOException("MMD DOC MUST HAVE A <BODY>, STARTING WITH A LEVEL-1 HEADING, e.g. '# My Heading')");
+				throw new IOException("MMD DOC MUST HAVE A <BODY>, STARTING WITH A LEVEL-1 HEADING (e.g. '# My Heading').");
 			}
 			// [4] Delegate parsing of the body to MmdSection
 			doc.bodyContent = MmdSection.parse(reader, currentLine);

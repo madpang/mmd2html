@@ -4,7 +4,7 @@
  * @author: madpang
  * @date:
  * - created on 2025-06-09
- * - updated on 2025-06-14
+ * - updated on 2025-07-01
  */
 
 package dev.madpang.ast;
@@ -118,7 +118,7 @@ public class MmdHeader {
 			// [3] Perform self-validation to ensure all required fields are present
 			if (!header.selfValidation()) {
 				throw new IOException("Header is missing required fields.");
-			}			
+			}
 		} catch (IOException e) {
 			throw e; // Re-throw the original exception
 		}
