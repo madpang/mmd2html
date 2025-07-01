@@ -1,20 +1,19 @@
 /**
- * @file: App.java
- * @brief: Main application class for the MMD to HTML parser.
+ * @file: MmdConverter {.java
+ * @brief: Main application class for the Mmd to HTML conversion.
  * @author: madpang
  * @date:
  * - created on 2025-06-09
- * - updated on 2025-06-29
+ * - updated on 2025-07-01
  */
-
-package dev.madpang;
 
 import java.io.FileReader;
 import java.io.BufferedReader;
 import java.util.Scanner;
+
 import dev.madpang.ast.MmdDocument;
 
-public class App {
+public class MmdConverter {
 	public static void main(String[] args) throws Exception {
 		/// Argument handling
 		String filePath;
@@ -23,7 +22,7 @@ public class App {
 			try (Scanner scanner = new Scanner(System.in)) {
 				// Print welcome message
 				System.out.println("////////////////////////////////");
-				System.out.println("// MMD to HTML parser started. /");
+				System.out.println("///   MMD to HTML Converter  ///");
 				System.out.println("////////////////////////////////");
 				// Debug information
 				System.out.println("Working directory: " + System.getProperty("user.dir"));
