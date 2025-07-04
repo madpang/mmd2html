@@ -1,0 +1,96 @@
++++ header
+@file: mmd2html/tickets.txt
++++
+
+=== Ticket 1
+
+@brief: Support fuzzy heading parsing.
+
+@status: TODO
+
+@date:
+- created on 2025-07-04
+- updated on 2025-07-04
+
+@details:
+The mmd doc is designed to only support 3 explicit heading levels:
+- H1: First level heading, denoted by `# Heading`
+- H2: Second level heading, denoted by `## Heading`
+- H3: Third level heading, denoted by `### Heading`
+Beyond that, it is expected to support 2 fuzzy headings, which are headings that do not strictly follow the above format but can still be recognized as headings.
+- Major fuzzy heading, denoted by `=== Heading`
+- Minor fuzzy heading, denoted by `--- Heading`
+Therefore, the mmd doc maximally supports 5 heading levels.
+Fuzzy headings are regarded as coming *after* an explicit heading---therefore, their equivalent levels are determined by the preceding explicit heading, if any---and they can be used to create a hierarchy of sections and subsections.
+
+=== Ticket 2
+
+@brief: Parse semantic paragraph into <p> and <pre> tags.
+
+@status: TODO
+
+@date:
+- created on 2025-07-04
+- updated on 2025-07-04
+
+@details:
+Currently, the mmd doc is only parsed into sections, and blocks of text delimited by blank lines are treated as semantic paragraphs.
+But a semantic paragraph is merely wrapped in the `<pre>` tag, which is only a temporary solution.
+The first step towards a full-fledged mmd doc parser is to parse semantic paragraphs into `<p>` tags, for general paragraph text, and `<pre>` tags, for preformatted text blocks---such as code blocks, console commands, etc.
+
+=== Ticket 3
+
+@brief: Add unit tests for the parser.
+
+@status: TODO
+
+@date:
+- created on 2025-07-04
+- updated on 2025-07-04
+
+@details:
+After careful consideration, I choose Java to implement the mmd doc parser, succeeding the initial trial in PowerShell.
+I would like to develop the parser in a formal way, with sufficient unit tests.
+
+=== Ticket 4
+
+@brief: Setup a CI pipeline for this project.
+
+@status: TODO
+
+@date:
+- created on 2025-07-04
+- updated on 2025-07-04
+
+@details:
+GitHub Actions would be a great tool to automate the CI/CD pipeline for this project.
+
+@details:
+
+=== Ticket 5
+
+@brief: Investigate deployment options for this project.
+
+@status: TODO
+
+@date:
+- created on 2025-07-04
+- updated on 2025-07-04
+
+@details:
+Currently, the mmd doc parser is invoked using `java` command line, maybe I should consider making it a standalone executable or a web service.
+
+@details:
+
+=== Ticket 6
+
+@brief: Formalize the README file for this project.
+
+@status: TODO
+
+@date:
+- created on 2025-07-04
+- updated on 2025-07-04
+
+@details:
+Current README file is just a draft, I should formalize it with proper sections and content.
