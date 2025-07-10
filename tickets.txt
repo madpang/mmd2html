@@ -27,7 +27,7 @@ Fuzzy headings are regarded as coming *after* an explicit heading---therefore, t
 
 @brief: Parse semantic paragraph into <p> and <pre> tags.
 
-@status: TODO
+@status: IN-PROGRESS
 
 @date:
 - created on 2025-07-04

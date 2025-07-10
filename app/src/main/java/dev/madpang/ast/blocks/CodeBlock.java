@@ -38,7 +38,7 @@ public final class CodeBlock implements IBlock {
 	// private String terminalLine;
 
 	/* private constructor ------------------------------------------------- */
-	private CodeBlock(String fenceTag, List<String> contentLines) {
+	private CodeBlock(List<String> contentLines, String fenceTag) {
 		this.codeType = fenceTag;
 		this.codeLines = contentLines;
 	}
@@ -95,7 +95,7 @@ public final class CodeBlock implements IBlock {
 		if (currentLine == null) {
 			throw new IOException("[ERROR] Unterminated code fence!");
 		}
-		return Optional.of(new CodeBlock(tag, content));
+		return Optional.of(new CodeBlock(content, tag));
 	}
 
 	/* static parser object to register globally --------------------------- */

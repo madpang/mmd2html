@@ -21,6 +21,16 @@ It can also have further subsections.
 
 Semantic paragraphs are separated by a blank line.
 
+So this line starts a new semantic paragraph.
+This line belongs to a paragraph, together with the previous line.
+The next line will start a code block, but *this* line is still part of the paragraph.
++++ code
+# This is a code block.
+def example_function():
+	print("Hello, World!")
++++
+Ordinary lines after a code block still belong to the "semantic paragraph", but will start a new paragraph.
+
 ### Third Level Heading
 
 This is a 3rd level subsection.
