@@ -18,6 +18,7 @@ import dev.madpang.util.CommonUtil;
 
 public class SemanticParagraph {
 	public List<String> rawLines = new ArrayList<>();
+	// @note: A `SemanticParagraph` has an implicit `public String terminalLine` which is a blank line.
 
 	/**
 	 * @note:
@@ -31,7 +32,6 @@ public class SemanticParagraph {
 	 * @todo:
 	 * This class should hold a list of blocks, which can be of different types.
 	 * But currently, it only holds lines of raw text.
-	 *
 	 */
 	public static SemanticParagraph parse(BufferedReader reader, String firstLine) throws IOException {
 		SemanticParagraph sp = new SemanticParagraph();

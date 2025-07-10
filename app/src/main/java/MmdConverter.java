@@ -1,5 +1,5 @@
 /**
- * @file: MmdConverter {.java
+ * @file: MmdConverter.java
  * @brief: Main application class for the Mmd to HTML conversion.
  * @details:
  * This class serves as the entry point for the MMD to HTML conversion application.
