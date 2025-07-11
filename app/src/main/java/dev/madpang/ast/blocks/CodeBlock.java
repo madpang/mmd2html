@@ -17,6 +17,8 @@ import java.util.regex.Pattern;
 import java.util.regex.Matcher;
 import java.util.Optional;
 
+import dev.madpang.util.CommonUtil;
+
 /**
  * Represents a *fenced* code block.
  */
@@ -50,14 +52,6 @@ public final class CodeBlock implements IBlock {
 	}
 
 	@Override
-	public String getTerminalLine() throws IOException {
-		if (codeLines.isEmpty()) {
-			throw new IOException("[WARNING] CodeBlock contains no lines.");
-		}
-		return FENCE_LINE;
-	}
-
-	@Override
 	public List<String> toHTML() throws IOException {
 		if (codeLines.isEmpty()) {
 			throw new IOException("[WARNING] CodeBlock contains no lines to convert to HTML.");
@@ -65,7 +59,7 @@ public final class CodeBlock implements IBlock {
 		List<String> htmlLines = new ArrayList<>();
 		htmlLines.add("<pre>");
 		for (String line : codeLines) {
-			htmlLines.add(line);
+			htmlLines.add(CommonUtil.escapeHTML(line));
 		}
 		htmlLines.add("</pre>");
 		return htmlLines;

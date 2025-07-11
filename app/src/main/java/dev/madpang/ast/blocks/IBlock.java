@@ -18,8 +18,6 @@ import java.util.List;
 public interface IBlock {
 	// Get the type of this block, e.g., "paragraph", "code", etc.
 	String getType();
-	// Get the delimiter line that ends this block, if applicable.
-	String getTerminalLine() throws IOException;
 	// Render this block as a sequence of HTML lines.
 	List<String> toHTML() throws IOException;	
 }
