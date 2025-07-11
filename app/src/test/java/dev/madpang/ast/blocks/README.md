@@ -38,52 +38,6 @@ Tests the `ParagraphBlock` class which represents paragraph content.
 - Unicode character support
 - Maintaining line order
 
-### 3. BlockParserTest.java
-Tests the `BlockParser` functional interface.
-
-**Test Coverage:**
-- Functional interface implementation
-- Parser composition patterns
-- Error propagation
-- Integration with existing parsers
-
-**Key Test Cases:**
-- Custom parser implementations
-- Optional return value handling
-- BufferedReader interaction
-- Exception handling
-
-### 4. IBlockTest.java
-Tests the `IBlock` interface contract.
-
-**Test Coverage:**
-- Interface contract verification
-- Polymorphic behavior
-- Error handling consistency
-- HTML generation patterns
-
-**Key Test Cases:**
-- Type identification
-- HTML output structure
-- Null handling
-- Immutability patterns
-
-### 5. BlocksIntegrationTest.java
-Integration tests for the entire blocks package.
-
-**Test Coverage:**
-- Multi-block processing
-- Parser chain behavior
-- HTML structure validation
-- Cross-block consistency
-- Real-world content scenarios
-
-**Key Test Cases:**
-- Processing different block types together
-- Parser extensibility
-- Error handling consistency
-- Complex content scenarios
-
 ## Running the Tests
 
 To run all tests:
@@ -100,20 +54,6 @@ To run with detailed output:
 ```bash
 ./gradlew test --info
 ```
-
-## Test Results
-
-- **Total Tests:** 54
-- **All tests pass** ✅
-- **Code Coverage:** Comprehensive coverage of all public methods and edge cases
-
-## Test Quality Features
-
-1. **Descriptive Test Names:** All tests use `@DisplayName` annotations with clear descriptions
-2. **Comprehensive Edge Cases:** Tests cover error conditions, boundary cases, and malformed input
-3. **Real-World Scenarios:** Integration tests use realistic content patterns
-4. **Error Verification:** Proper exception testing with message validation
-5. **HTML Validation:** Verification of proper HTML structure and escaping
 
 ## Dependencies
 
