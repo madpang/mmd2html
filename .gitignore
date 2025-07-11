@@ -13,3 +13,6 @@ tmp*
 
 # Ignore Gradle build output directory
 build
+
+# Preparatory binary design files
+*.key
