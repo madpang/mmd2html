@@ -217,12 +217,12 @@ public class BlocksIntegrationTest {
         assertTrue(paragraphException.getMessage().contains("no lines"));
         
         // Test invalid input errors
-        assertThrows(IllegalArgumentException.class, () -> {
+        assertThrows(IOException.class, () -> {
             ParagraphBlock paragraph = new ParagraphBlock();
             paragraph.addLine(null);
         });
         
-        assertThrows(IllegalArgumentException.class, () -> {
+        assertThrows(IOException.class, () -> {
             ParagraphBlock paragraph = new ParagraphBlock();
             paragraph.addLine("");
         });

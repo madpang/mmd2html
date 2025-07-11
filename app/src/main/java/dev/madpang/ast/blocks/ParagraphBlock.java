@@ -55,9 +55,9 @@ public final class ParagraphBlock implements IBlock {
 	}
 
 	/* instance behavior ---------------------------------------------------- */
-	public void addLine(String line) {
+	public void addLine(String line) throws IOException {
 		if (line == null || line.trim().isEmpty()) {
-			throw new IllegalArgumentException("[ERROR] HTML paragraph cannot contain blank or null lines");
+			throw new IOException("[ERROR] HTML paragraph cannot contain blank or null lines");
 		}
 		// Collect sentence line
 		this.sentenceLines.add(line);
