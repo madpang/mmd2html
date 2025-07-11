@@ -1,5 +1,11 @@
 /**
  * @file: BlockParser.java
+ * @brief: Functional interface for parsing blocks from MMD text.
+ * @author: madpang
+ * @date:
+ * - created on 2025-07-11
+ * - updated on 2025-07-11
+ * @see IBlock.java
  */
 
 package dev.madpang.ast.blocks;
