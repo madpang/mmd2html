@@ -37,10 +37,9 @@ public final class CodeBlock implements IBlock {
 	private final String codeType; // e.g. "java", "python", etc.
 	// Real content of the code block.
 	private List<String> codeLines;
-	// private String terminalLine;
 
-	/* private constructor ------------------------------------------------- */
-	private CodeBlock(List<String> contentLines, String fenceTag) {
+	/* constructor (accessible only within the same package, for test) ------ */
+	CodeBlock(List<String> contentLines, String fenceTag) {
 		this.codeType = fenceTag;
 		this.codeLines = contentLines;
 	}
@@ -85,6 +84,9 @@ public final class CodeBlock implements IBlock {
 		while ((currentLine != null && !currentLine.equals(FENCE_LINE))) {
 			content.add(currentLine);
 			currentLine = reader.readLine();
+		}
+		if (content.isEmpty()) {
+			throw new IOException("[ERROR] Empty code block is not allowed!");
 		}
 		if (currentLine == null) {
 			throw new IOException("[ERROR] Unterminated code fence!");
