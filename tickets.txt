@@ -27,11 +27,11 @@ Fuzzy headings are regarded as coming *after* an explicit heading---therefore, t
 
 @brief: Parse semantic paragraph into <p> and <pre> tags.
 
-@status: IN-PROGRESS
+@status: DONE
 
 @date:
 - created on 2025-07-04
-- updated on 2025-07-04
+- updated on 2025-07-12
 
 @details:
 Currently, the mmd doc is only parsed into sections, and blocks of text delimited by blank lines are treated as semantic paragraphs.
@@ -56,14 +56,14 @@ I would like to develop the parser in a formal way, with sufficient unit tests.
 
 @brief: Setup a CI pipeline for this project.
 
-@status: TODO
+@status: DONE
 
 @date:
 - created on 2025-07-04
-- updated on 2025-07-04
+- updated on 2025-07-12
 
 @details:
-GitHub Actions would be a great tool to automate the CI/CD pipeline for this project.
+This project relies on Gradle for build and test, so I have set up a GitHub Actions workflow to run the Gradle build and test tasks on every push and pull request.
 
 @details:
 
@@ -94,3 +94,17 @@ Currently, the mmd doc parser is invoked using `java` command line, maybe I shou
 
 @details:
 Current README file is just a draft, I should formalize it with proper sections and content.
+
+=== Ticket 7
+
+@brief: Improve semantic paragraph parsing for lists.
+
+@status: TODO
+
+@date:
+- created on 2025-07-12
+- updated on 2025-07-12
+
+@details:
+Currently, the semantic paragraph handles code block, and all other text is treated as plain paragraph.
+The next step towards a full-fledged mmd doc parser is to add support for lists, which are common in mmd docs.
