@@ -2,9 +2,7 @@
  * @file: MmdHeader.java
  * @brief: Represents the header of a MMD document, which includes meta info. for the document.
  * @author: madpang
- * @date:
- * - created on 2025-06-09
- * - updated on 2025-07-01
+ * @date: [created: 2025-06-09, updated: 2025-08-03]
  */
 
 package dev.madpang.ast;
@@ -25,16 +23,14 @@ public class MmdHeader {
 	 * A real MMD header block looks like
 	 * ----------------------------------------------------------------
 	 * |                                                              |
-	 * | +++ header                                                   | <- 1st line
+	 * | ``` header                                                   | <- 1st line
 	 * | @file: blank-article.txt                                     |
 	 * | @brief: A blank article serving as a boilerplate.            |
 	 * | @title: A wonderful article                                  |
 	 * | @author: madpang                                             |
-	 * | @date                                                        |
-	 * | - created on 2025-05-11                                      |
-	 * | - updated on 2025-05-17                                      |
-	 * | @version: 0.1.0                                              |
-	 * | +++                                                          |
+	 * | @date: [created: 2025-05-11, updated: 2025-05-17]            |
+	 * | @version: 0.2.0                                              |
+	 * | ```                                                          |
 	 * |                                                              |
 	 * ----------------------------------------------------------------
 	 *   |
@@ -44,15 +40,15 @@ public class MmdHeader {
 	public Map<String, String> metaInfo = new HashMap<>();
 
 	/**
-	 * @brief: Parses a MmdHeader block from the reader. Assumes the first line is '+++ header'.
+	 * @brief: Parses a MmdHeader block from the reader. Assumes the first line is '``` header'.
 	 */
 	public static MmdHeader parse(BufferedReader reader, String firstLine) throws IOException {
 		MmdHeader header = new MmdHeader();
 		try {
 			// [1] If firstLine is not provided, read the first line from the reader
 			String currentLine = (firstLine != null) ? firstLine : reader.readLine();
-			if (currentLine == null || !currentLine.equals("+++ header")) {
-				throw new IOException("First line must be '+++ header'");
+			if (currentLine == null || !currentLine.equals("``` header")) {
+				throw new IOException("First line must be '``` header'");
 			}
 			// [2] Start parsing the header block
 			boolean inHeader = true;
@@ -60,7 +56,7 @@ public class MmdHeader {
 			Matcher metaMatcher;
 			String metaLine;
 			while ((metaLine = reader.readLine()) != null) {
-				if (metaLine.equals("+++")) {
+				if (metaLine.equals("```")) {
 					inHeader = false; // End of header block
 					break;
 				}
@@ -82,25 +78,15 @@ public class MmdHeader {
 							header.metaInfo.put("author", value.trim());
 							break;
 						case "date":
-							// @note: date fields need to be handled specially
-							Pattern datePattern = Pattern.compile("^- (created|updated) on (\\d{4}-\\d{2}-\\d{2})$");
-							Matcher dateMatcher;
-							for (int i = 0; i < 2; i++) {
-								metaLine = reader.readLine();
-								if (metaLine != null) {
-									dateMatcher = datePattern.matcher(metaLine);
-									if (dateMatcher.matches()) {
-										String dateType = dateMatcher.group(1);
-										String dateValue = dateMatcher.group(2);
-										if (dateType.equals("created")) {
-											header.metaInfo.put("date-created", dateValue);
-										} else if (dateType.equals("updated")) {
-											header.metaInfo.put("date-updated", dateValue);
-										}
-									}
-								} else {
-									break; // No more lines to read
-								}
+							// @note: date field now uses format: [created: YYYY-MM-DD, updated: YYYY-MM-DD]
+							String dateValue = value.trim();
+							Pattern datePattern = Pattern.compile("^\\[created: (\\d{4}-\\d{2}-\\d{2}), updated: (\\d{4}-\\d{2}-\\d{2})\\]$");
+							Matcher dateMatcher = datePattern.matcher(dateValue);
+							if (dateMatcher.matches()) {
+								String createdDate = dateMatcher.group(1);
+								String updatedDate = dateMatcher.group(2);
+								header.metaInfo.put("date-created", createdDate);
+								header.metaInfo.put("date-updated", updatedDate);
 							}
 							break;
 						case "version":
@@ -113,7 +99,7 @@ public class MmdHeader {
 				}
 			}
 			if (inHeader) {
-				throw new IOException("Header block is not closed properly, expecting '+++' to end the header.");
+				throw new IOException("Header block is not closed properly, expecting '```' to end the header.");
 			}
 			// [3] Perform self-validation to ensure all required fields are present
 			if (!header.selfValidation()) {
