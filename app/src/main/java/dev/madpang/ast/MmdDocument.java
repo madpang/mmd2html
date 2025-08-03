@@ -4,9 +4,7 @@
  * @author: madpang
  * @details:
  * This class is the overarching structure for this mmd-to-html converter, it parses the mmd document into AST nodes, and reconstructs the HTML from the AST representation.
- * @date:
- * - created on 2025-06-09
- * - updated on 2025-07-01
+ * @date: [created: 2025-06-09, updated: 2025-08-03]
  */
 
 package dev.madpang.ast;
@@ -38,8 +36,8 @@ public class MmdDocument {
 		try {
 			// [1] If firstLine is not provided, read the first line from the reader
 			String currentLine = (firstLine != null) ? firstLine : reader.readLine();
-			if (currentLine == null || !currentLine.equals("+++ header")) {
-				throw new IOException("MMD DOC MUST PROVIDE A <HEADER>, STARTING WITH '+++ header'");
+			if (currentLine == null || !currentLine.equals("``` header")) {
+				throw new IOException("MMD DOC MUST PROVIDE A <HEADER>, STARTING WITH '``` header'");
 			}
 			// [2] Delegate parsing of the header to MmdHeader
 			doc.frontMatter = MmdHeader.parse(reader, currentLine);
