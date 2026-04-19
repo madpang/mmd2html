@@ -2,7 +2,7 @@
  * @file: CodeBlock.java
  * @brief: Represents a code block in the document.
  * @author: madpang
- * @date: [created: 2025-06-09, updated: 2025-08-03]
+ * @date: [created: 2025-06-09, updated: 2026-04-19]
  */
 
 package dev.madpang.ast.blocks;
@@ -27,7 +27,7 @@ public final class CodeBlock implements IBlock {
 	public static final String BLOCK_TYPE = "code";
 	/**
 	 * @note:
-	 * A code block is started with "``` <non-empty-string>";
+	 * A code block is started with "``` <string-without-whitespace>" (e.g. "``` java") to indicate the code type,;
 	 * and it ends with with EXACTLY "```".
 	 */
 	public static final String FENCE_LINE = "```";
@@ -69,13 +69,13 @@ public final class CodeBlock implements IBlock {
 
 	/* static factory / parser --------------------------------------------- */
 	public static Optional<IBlock> parse(BufferedReader reader, String firstLine) throws IOException {
-		Pattern codeBlockStart = Pattern.compile("^`{3} (\\S.*)$");
+		Pattern codeBlockStart = Pattern.compile("^`{3} (\\S+)$");
 		Matcher matcher = codeBlockStart.matcher(firstLine);
 		if (!matcher.matches()) {
 			return Optional.empty();
 		}
 		// Retrieve the code type
-		String tag = matcher.group(1).trim();
+		String tag = matcher.group(1);
 		// Collect the actual code block content
 		List<String> content = new ArrayList<>();
 		String currentLine = reader.readLine();

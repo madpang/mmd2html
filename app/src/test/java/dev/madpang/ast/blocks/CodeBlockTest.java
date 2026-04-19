@@ -1,8 +1,8 @@
 /**
  * @file: CodeBlockTest.java
  * @brief: Unit tests for CodeBlock class
- * @author: [Claude Sonnet 4 (AI), madpang]
- * @date: [created: 2025-07-11, updated: 2025-08-03]
+ * @author: [claude, madpang]
+ * @date: [created: 2025-07-11, updated: 2026-04-19]
  */
 
 package dev.madpang.ast.blocks;
@@ -195,17 +195,15 @@ public class CodeBlockTest {
 	}
 
 	@Test
-	@DisplayName("Should parse code block with language containing spaces")
+	@DisplayName("Should fail to parse code block with whitespace in language tag")
 	public void testParseCodeBlockWithSpacesInLanguage() throws IOException {
-		String firstLine = "``` c++ with comments";
+		String firstLine = "``` cpp some extra info";
 		String content = "// This is a C++ comment\nint main() { return 0; }\n```";
 		BufferedReader reader = new BufferedReader(new StringReader(content));
 		
 		Optional<IBlock> result = CodeBlock.parse(reader, firstLine);
 		
-		assertTrue(result.isPresent());
-		CodeBlock codeBlock = (CodeBlock) result.get();
-		assertEquals("c++ with comments", codeBlock.getCodeType());
+		assertFalse(result.isPresent());
 	}
 
 	@Test
