@@ -1,6 +1,6 @@
-+++ header
-@file: mmd2html/tickets.txt
-+++
+---
+file: tickets.txt
+---
 
 === Ticket 1
 
@@ -8,9 +8,7 @@
 
 @status: TODO
 
-@date:
-- created on 2025-07-04
-- updated on 2025-07-04
+@date: [created: 2025-07-04, updated: 2025-07-04]
 
 @details:
 The mmd doc is designed to only support 3 explicit heading levels:
@@ -29,9 +27,7 @@ Fuzzy headings are regarded as coming *after* an explicit heading---therefore, t
 
 @status: DONE
 
-@date:
-- created on 2025-07-04
-- updated on 2025-07-12
+@date: [created: 2025-07-04, updated: 2025-07-12]
 
 @details:
 Currently, the mmd doc is only parsed into sections, and blocks of text delimited by blank lines are treated as semantic paragraphs.
@@ -44,9 +40,7 @@ The first step towards a full-fledged mmd doc parser is to parse semantic paragr
 
 @status: TODO
 
-@date:
-- created on 2025-07-04
-- updated on 2025-07-04
+@date: [created: 2025-07-04, updated: 2025-07-04]
 
 @details:
 After careful consideration, I choose Java to implement the mmd doc parser, succeeding the initial trial in PowerShell.
@@ -58,9 +52,7 @@ I would like to develop the parser in a formal way, with sufficient unit tests.
 
 @status: DONE
 
-@date:
-- created on 2025-07-04
-- updated on 2025-07-12
+@date: [created: 2025-07-04, updated: 2025-07-12]
 
 @details:
 This project relies on Gradle for build and test, so I have set up a GitHub Actions workflow to run the Gradle build and test tasks on every push and pull request.
@@ -73,9 +65,7 @@ This project relies on Gradle for build and test, so I have set up a GitHub Acti
 
 @status: TODO
 
-@date:
-- created on 2025-07-04
-- updated on 2025-07-04
+@date: [created: 2025-07-04, updated: 2025-07-04]
 
 @details:
 Currently, the mmd doc parser is invoked using `java` command line, maybe I should consider making it a standalone executable or a web service.
@@ -88,9 +78,7 @@ Currently, the mmd doc parser is invoked using `java` command line, maybe I shou
 
 @status: TODO
 
-@date:
-- created on 2025-07-04
-- updated on 2025-07-04
+@date: [created: 2025-07-04, updated: 2025-07-04]
 
 @details:
 Current README file is just a draft, I should formalize it with proper sections and content.
@@ -101,9 +89,7 @@ Current README file is just a draft, I should formalize it with proper sections 
 
 @status: TODO
 
-@date:
-- created on 2025-07-12
-- updated on 2025-07-12
+@date: [created: 2025-07-12, updated: 2025-07-12]
 
 @details:
 Currently, the semantic paragraph handles code block, and all other text is treated as plain paragraph.
