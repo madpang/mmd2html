@@ -43,6 +43,12 @@ RUN <<-EOT
 	rm -rf /var/lib/apt/lists/*
 EOT
 
+# --- Set up Java Environment
+RUN <<-EOT
+	mkdir -p /opt/java
+	ln -s "$(dirname "$(dirname "$(readlink -f "$(command -v java)")")")" /opt/java/openjdk
+EOT
+
 # === Work env. setup
 
 # --- Create a non-root user
@@ -96,6 +102,8 @@ USER $PD_USER_NAME
 ENV USER=$PD_USER_NAME
 ENV HOME=$PD_USER_HOME
 ENV SHELL='/bin/bash'
+ENV JAVA_HOME=/opt/java/openjdk
+ENV PATH="${JAVA_HOME}/bin:${PATH}"
 
 WORKDIR $PD_WORKSPACE
 
