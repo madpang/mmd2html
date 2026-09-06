@@ -17,6 +17,7 @@ SHELL ["/bin/bash", "-euc"]
 ENV TZ='Asia/Tokyo'
 ENV LANG='C.UTF-8'
 ENV LC_ALL='C.UTF-8'
+ENV COWORK_DIR="/mnt/datastore/cowork"
 
 # Install the necessary packages and set up the development environment.
 # @details:
@@ -49,6 +50,12 @@ RUN <<-EOT
 	ln -s "$(dirname "$(dirname "$(readlink -f "$(command -v java)")")")" /opt/java/openjdk
 EOT
 
+# --- Set up workspace for devcontainer
+RUN <<-EOT
+	mkdir -p "$COWORK_DIR"
+	chmod 777 "$COWORK_DIR"
+EOT
+
 # === Work env. setup
 
 # --- Create a non-root user
@@ -58,7 +65,6 @@ ARG PD_USER_NAME='ubuntu'
 ARG PD_USER_UID='1000'
 ARG PD_USER_GID=$PD_USER_UID
 ARG PD_USER_HOME="/home/${PD_USER_NAME}"
-ARG PD_WORKSPACE="${PD_USER_HOME}/wksp"
 RUN <<-EOT
 	echo "${PD_USER_NAME} ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/$PD_USER_NAME
 	chmod 0440 /etc/sudoers.d/$PD_USER_NAME
@@ -92,6 +98,11 @@ RUN <<-EOT
 	chown $PD_USER_NAME:$PD_USER_NAME /run/user/$PD_USER_UID
 EOT
 
+# Create a dir for the repo.
+RUN <<-EOT
+	mkdir -p "${COWORK_DIR}/20_repo/mmd2html"
+EOT
+
 # --- Clean up
 RUN rm -rf /tmp/*
 
@@ -105,7 +116,7 @@ ENV SHELL='/bin/bash'
 ENV JAVA_HOME=/opt/java/openjdk
 ENV PATH="${JAVA_HOME}/bin:${PATH}"
 
-WORKDIR $PD_WORKSPACE
+WORKDIR "$COWORK_DIR"
 
 # Set the default command
 CMD echo "PLEASE LOGIN TO THE CONTAINER OR USE IT AS DEVCONTAINER" && \
