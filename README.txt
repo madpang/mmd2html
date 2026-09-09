@@ -16,10 +16,10 @@ The wrapper uses Gradle 8.14.2 and downloads Gradle and dependencies on its firs
 ./gradlew build
 ```
 
-This compiles the application, runs the JUnit tests, and creates `app/build/libs/mmd2html.jar`.
-Application distributions are under `app/build/distributions/` and compiled classes are under `app/build/classes/java/main/`.
+This compiles the application, runs the JUnit tests, and creates `build/libs/mmd2html.jar`.
+Application distributions are under `build/distributions/` and compiled classes are under `build/classes/java/main/`.
 Use `./gradlew test` to run the test task and its prerequisites.
-The test report is at `app/build/reports/tests/test/index.html`.
+The test report is at `build/reports/tests/test/index.html`.
 On Windows, use `gradlew.bat build` for the wrapper build.
 
 ## Build with plain JDK tools
@@ -30,7 +30,7 @@ With JDK 21, you can compile and package the application without Gradle or downl
 
 ```sh
 mkdir -p build/plain/classes
-find app/src/main/java -name '*.java' -print > build/plain/sources.txt
+find src -name '*.java' -print > build/plain/sources.txt
 javac --release 21 -encoding UTF-8 -d build/plain/classes @build/plain/sources.txt
 jar --create --file build/plain/mmd2html.jar --main-class MmdConverter -C build/plain/classes .
 ```
@@ -71,7 +71,7 @@ Use the example above with these commands.
 After a Gradle build:
 
 ```sh
-java -jar app/build/libs/mmd2html.jar build/sample.txt build/sample.html
+java -jar build/libs/mmd2html.jar build/sample.txt build/sample.html
 ```
 
 After a plain JDK build:
@@ -84,7 +84,7 @@ The output file is replaced if it exists, and its parent directory must already 
 Pass an empty second argument to write to standard output:
 
 ```sh
-java -jar app/build/libs/mmd2html.jar build/sample.txt ""
+java -jar build/libs/mmd2html.jar build/sample.txt ""
 ```
 
 The CLI currently accepts either zero arguments or exactly two arguments.
@@ -93,28 +93,50 @@ With no arguments, it prompts for the input path and then the output path.
 Press Enter at the output prompt to write HTML to standard output.
 
 ```sh
-java -jar app/build/libs/mmd2html.jar
+java -jar build/libs/mmd2html.jar
 ```
 
 You can also run the compiled classes directly:
 
 ```sh
-java -cp app/build/classes/java/main MmdConverter build/sample.txt build/sample.html
+java -cp build/classes/java/main MmdConverter build/sample.txt build/sample.html
 ```
 
-For Gradle execution, supply both paths relative to `app/`, which is the run task's working directory:
+For Gradle execution, supply both paths relative to the repository root:
 
 ```sh
-./gradlew run --args="../build/sample.txt ../build/sample.html"
+./gradlew run --args="build/sample.txt build/sample.html"
 ```
 
 Direct `java` commands resolve paths from the shell's working directory.
 Use direct `java` execution for interactive input.
 
-## Structure proposal
+## Repository structure
 
-See [the structure proposal](docs/structure-proposal.md) for a flatter layout and the needed Gradle changes.
-The proposal has not been applied.
+```text
+mmd2html/
+|-- src/
+|   |-- MmdConverter.java
+|   |-- ast/
+|   |   `-- blocks/
+|   `-- util/
+|-- test/
+|   `-- ast/
+|       `-- blocks/
+|-- build/                 (generated and ignored)
+|-- build.gradle.kts
+|-- settings.gradle.kts
+|-- gradle/
+|-- gradlew
+`-- docs/
+```
+
+The repository is one Gradle project with application sources in `src/` and tests in `test/`.
+Java packages are `ast`, `ast.blocks`, and `util`.
+The entry point remains `MmdConverter`.
+See [the structure and migration notes](docs/structure-proposal.md) for build settings and changes from the old layout.
+Gradle application archives and installed launchers now use the name `mmd2html`.
+Use `./gradlew installDist` to create `build/install/mmd2html/bin/mmd2html`.
 
 ## Earlier design notes
 

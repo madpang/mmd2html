@@ -21,7 +21,7 @@ dependencies {
 
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 
-    // This dependency is used by the application.
+    // Retained from the existing build; currently unused by application source.
     implementation(libs.guava)
 }
 
@@ -49,4 +49,16 @@ tasks.named<Jar>("jar") {
 tasks.named<Test>("test") {
     // Use JUnit Platform for unit tests.
     useJUnitPlatform()
+}
+
+// Keep application sources and tests in separate top-level directories.
+sourceSets {
+    main {
+        java.setSrcDirs(listOf("src"))
+        resources.setSrcDirs(emptyList<String>())
+    }
+    test {
+        java.setSrcDirs(listOf("test"))
+        resources.setSrcDirs(emptyList<String>())
+    }
 }

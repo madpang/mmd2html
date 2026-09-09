@@ -8,7 +8,7 @@
  * @see IBlock.java
  */
 
-package dev.madpang.ast.blocks;
+package ast.blocks;
 
 import java.io.BufferedReader;
 import java.io.IOException;

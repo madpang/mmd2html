@@ -1,7 +1,7 @@
-# Unit Tests for dev.madpang.ast.blocks Package
+# Unit Tests for ast.blocks Package
 
-This directory contains comprehensive unit tests for the `dev.madpang.ast.blocks` package.
-The test suite covers all classes and interfaces in the package with thorough test coverage.
+This directory contains comprehensive unit tests for the `ast.blocks` package.
+The test suite covers code blocks and paragraphs.
 
 ## Test Files
 
@@ -16,7 +16,7 @@ Tests the `CodeBlock` class which handles fenced code blocks in MMD.
 - Static parser functionality
 
 **Key Test Cases:**
-- Valid code block parsing (`+++ language` format)
+- Valid code block parsing (a three-backtick fence followed by `code`)
 - Multi-line code content
 - HTML special character escaping (`<`, `>`, `&`)
 - Error conditions (unterminated blocks, invalid fence format)
@@ -40,6 +40,8 @@ Tests the `ParagraphBlock` class which represents paragraph content.
 
 ## Running the Tests
 
+Run these commands from the repository root.
+
 To run all tests:
 ```bash
 ./gradlew test
@@ -47,7 +49,7 @@ To run all tests:
 
 To run tests for a specific class:
 ```bash
-./gradlew test --tests "dev.madpang.ast.blocks.CodeBlockTest"
+./gradlew test --tests "ast.blocks.CodeBlockTest"
 ```
 
 To run with detailed output:

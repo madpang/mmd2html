@@ -9,7 +9,7 @@
  * - updated on 2025-07-11
  */
 
-package dev.madpang.ast.blocks;
+package ast.blocks;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeEach;

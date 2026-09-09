@@ -1,32 +1,28 @@
-# Repository structure proposal
+# Repository structure and migration
 
-Status: proposal only.
-No source moves, package changes, or Gradle configuration changes have been made.
+Status: implemented using the approved src/ and test/ layout.
+This replaces the earlier proposal to put the entry point and the dev/madpang package tree at the repository root.
 
-## Recommended layout
-
-Make the repository one Gradle project and put the application entry point and package tree at its root.
-Keep the existing Java package names so this change is about file layout alone.
+## Current layout
 
 ```text
 mmd2html/
-|-- MmdConverter.java
-|-- dev/
-|   `-- madpang/
-|       |-- ast/
-|       |   |-- MmdDocument.java
-|       |   |-- MmdHeader.java
-|       |   |-- MmdSection.java
-|       |   |-- SemanticParagraph.java
-|       |   `-- blocks/
-|       |       |-- IBlock.java
-|       |       |-- BlockParser.java
-|       |       |-- ParagraphBlock.java
-|       |       `-- CodeBlock.java
-|       `-- util/
-|           `-- CommonUtil.java
+|-- src/
+|   |-- MmdConverter.java
+|   |-- ast/
+|   |   |-- MmdDocument.java
+|   |   |-- MmdHeader.java
+|   |   |-- MmdSection.java
+|   |   |-- SemanticParagraph.java
+|   |   `-- blocks/
+|   |       |-- IBlock.java
+|   |       |-- BlockParser.java
+|   |       |-- ParagraphBlock.java
+|   |       `-- CodeBlock.java
+|   `-- util/
+|       `-- CommonUtil.java
 |-- test/
-|   `-- dev/madpang/ast/
+|   `-- ast/
 |       |-- MmdHeaderTest.java
 |       `-- blocks/
 |           |-- README.md
@@ -44,32 +40,23 @@ mmd2html/
 `-- build/                         (generated and ignored)
 ```
 
-Move `app/src/main/java/MmdConverter.java` to the root and `app/src/main/java/dev/` to `dev/`.
-Move the contents of `app/src/test/java/` to `test/`, including the test notes.
-There are no resource files in the current source tree.
-If resources are needed later, add explicit `resources/` and `test-resources/` roots.
+Application and test package paths start at their respective source roots.
+The package names are ast, ast.blocks, and util.
+MmdConverter remains in the default package and remains the application entry point.
 
-This removes `app/src/main/java` while retaining the package path `dev/madpang`.
-Renaming packages to top-level `ast` and `util` would be a separate change affecting declarations and imports.
-Keeping the names avoids that extra work and preserves the public class names.
-A smaller alternative is `src/` and `test/`, but placing the entry point at the root is closer to the requested example.
+## Gradle configuration
 
-The supplied [Java structure article](https://medium.com/@setopet/structuring-java-projects-omniscient-main-modules-and-composite-configurations-525bd936b817) provides the visual starting point.
-Its main topic is module dependencies and configuration, rather than Gradle source directory settings.
-This small application does not need the extra modules described later in that article.
+There is one root project named mmd2html.
+The application build script is now at the root and settings no longer include an app subproject.
+The wrapper, version catalog, Java 21 toolchain, JUnit setup, and JAR manifest are retained.
+Guava remains declared to keep dependency cleanup separate from the layout change.
 
-## Gradle changes to make later
-
-Move `app/build.gradle.kts` to the root.
-Remove `include("app")` from `settings.gradle.kts` and keep the root project name and toolchain resolver.
-Keep the application plugin, Java 21 toolchain, dependency versions, JUnit setup, main class, and JAR manifest unchanged in the first pass.
-Add these source sets to the root build script:
+The root build script selects source directories explicitly:
 
 ```kotlin
 sourceSets {
     main {
-        java.setSrcDirs(listOf("."))
-        java.setIncludes(listOf("MmdConverter.java", "dev/**/*.java"))
+        java.setSrcDirs(listOf("src"))
         resources.setSrcDirs(emptyList<String>())
     }
     test {
@@ -79,62 +66,51 @@ sourceSets {
 }
 ```
 
-The main source include list is required because the source root is now the repository root.
-It prevents test files and generated Java files under `build/` from entering the application compilation.
-Any new top-level application package would need an explicit include entry.
-Gradle documents configurable source sets in its [Java plugin reference](https://docs.gradle.org/8.14.2/userguide/java_plugin.html#sec:java_project_layout).
+Tests and generated files under build/ are outside the application source root.
+No broad repository scan or package include list is needed.
+There are no resources in this version.
+Add explicit resource roots if resources are introduced later.
 
-Keep the wrapper and version catalog where they are.
-Guava appears unused, but removing it can be reviewed separately from the layout change.
-Delete the empty tracked `app/` hierarchy after the moves.
-Old ignored `app/build/` files can be removed from a local checkout after checking that they contain only generated output.
+## Migration from the old layout
 
-## Commands and consumers affected
-
-| Current | Proposed |
+| Old | Current |
 | --- | --- |
-| `./gradlew build` | Unchanged |
+| `app/src/main/java/MmdConverter.java` | `src/MmdConverter.java` |
+| `app/src/main/java/dev/madpang/` | `src/` |
+| `app/src/test/java/dev/madpang/` | `test/` |
+| `dev.madpang.ast` | `ast` |
+| `dev.madpang.ast.blocks` | `ast.blocks` |
+| `dev.madpang.util` | `util` |
+| `app/build.gradle.kts` | `build.gradle.kts` |
 | `./gradlew :app:test` | `./gradlew test` |
 | `app/build/libs/mmd2html.jar` | `build/libs/mmd2html.jar` |
 | `app/build/classes/java/main` | `build/classes/java/main` |
 | `app/build/reports/tests/test/index.html` | `build/reports/tests/test/index.html` |
-| `app/build/distributions/` | `build/distributions/` |
+| `app/build/distributions/app.*` | `build/distributions/mmd2html.*` |
+| `app/build/install/app/bin/app` | `build/install/mmd2html/bin/mmd2html` |
 | Gradle run working directory: `app/` | Repository root |
 
-The root project is named `mmd2html`, so application distribution and launcher names may change from `app` to `mmd2html`.
-Check consumers of both the JAR and installed launchers.
-The repository CI already runs `./gradlew build` from the root, so that command stays valid.
-Search scripts, container files, IDE settings, and downstream pd-phronesis and Zettelkasten build scripts for `app/` paths and `:app:` task names before applying the change.
-Update any affected consumers together with the layout change.
+The root commands `./gradlew build` and `./gradlew test` remain valid.
+The existing CI uses these commands and needs no path change.
+README build and run examples now use the current paths.
+Test notes use the shortened package names for test selection.
 
-The proposed Gradle run command becomes:
+Code that imports the old packages must update its imports and be recompiled.
+Consumers that only invoke MmdConverter keep the same entry point but must use the new artifact path.
+Downstream pd-phronesis and Zettelkasten checkouts pinned to older converter commits keep their existing paths until they adopt this commit.
+The inspected pd-phronesis develop/build-post.ps1 uses `tools/mmd2html/app/build/libs/mmd2html.jar`.
+When adopting this refactor, change that path to `tools/mmd2html/build/libs/mmd2html.jar` and update any other app launcher names or :app: task references.
+This refactor does not change their pinned dependencies.
 
-```sh
-./gradlew run --args="build/sample.txt build/sample.html"
-```
+Old ignored app/build files can remain in existing checkouts after switching branches.
+They are not part of this build and should not be used to run the refactored converter.
+The root clean task removes build/, including any plain JDK output or sample input saved there.
+Recreate the README sample after running clean.
 
-The plain JDK source list becomes:
+## Verification
 
-```sh
-mkdir -p build/plain/classes
-printf '%s\n' MmdConverter.java > build/plain/sources.txt
-find dev -name '*.java' -print >> build/plain/sources.txt
-javac --release 21 -encoding UTF-8 -d build/plain/classes @build/plain/sources.txt
-jar --create --file build/plain/mmd2html.jar --main-class MmdConverter -C build/plain/classes .
-```
-
-These are proposed commands, not commands for the current tree.
-
-## Implementation and acceptance plan
-
-1. Record the current test count and HTML output from the README sample.
-2. Move the files with `git mv` and apply the root Gradle settings above.
-3. Update README paths and any consumer paths found in the audit.
-4. Run `./gradlew clean build` and confirm that the existing tests pass.
-5. Run the revised plain JDK build and compare its HTML with the baseline and Gradle JAR output.
-6. Check Gradle run paths, interactive Java execution, standard output, distribution contents, and test reports.
-7. Confirm that application JARs contain no test classes and source discovery excludes generated files.
-8. Commit the layout change separately from any parser or dependency changes.
-
-Completion means the same parser behavior and tests pass with the flatter tree and all known build consumers use the new paths.
-Until this proposal is accepted for implementation, keep the existing source tree and build configuration.
+Use the README commands for both the Gradle Wrapper and plain JDK builds.
+Check that the existing 40 tests pass and that both JARs produce the same HTML as before the move.
+Also check standard output, interactive input, direct classpath execution, Gradle run, and the installed launcher.
+Application JARs should contain ast/ and util/ classes without test classes or the old dev/madpang/ tree.
+Parser logic and CLI argument behavior are unchanged by this refactor.
