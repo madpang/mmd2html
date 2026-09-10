@@ -71,23 +71,21 @@ RUN <<-EOT
 EOT
 
 # --- User Experience Enhancements
-COPY --chmod=0644 copy/config/tmux-conf /tmp/tmux-conf
-COPY --chmod=0600 copy/config/ssh-conf /tmp/ssh-conf
-
-# Setup tmux
-COPY --chmod=0644 copy/config/tmux-conf /tmp/tmux-conf
-RUN <<-EOT
-	cp /tmp/tmux-conf $PD_USER_HOME/.tmux.conf
-	chown $PD_USER_NAME:$PD_USER_NAME $PD_USER_HOME/.tmux.conf
-EOT
 
 # Setup SSH
-COPY --chmod=0600 copy/config/ssh-conf /tmp/ssh-conf
+COPY --chmod=0600 copy/config/default.ssh.config /tmp/default.ssh.config
 RUN <<-EOT
 	[ -d "$PD_USER_HOME/.ssh" ] || mkdir $PD_USER_HOME/.ssh
 	chown $PD_USER_NAME:$PD_USER_NAME $PD_USER_HOME/.ssh
-	cp /tmp/ssh-conf $PD_USER_HOME/.ssh/config
+	cp /tmp/default.ssh.config $PD_USER_HOME/.ssh/config
 	chown $PD_USER_NAME:$PD_USER_NAME $PD_USER_HOME/.ssh/config
+EOT
+
+# Setup tmux
+COPY --chmod=0644 copy/config/default.tmux.config /tmp/default.tmux.config
+RUN <<-EOT
+	cp /tmp/default.tmux.config $PD_USER_HOME/.tmux.conf
+	chown $PD_USER_NAME:$PD_USER_NAME $PD_USER_HOME/.tmux.conf
 EOT
 
 # Setup GPG
