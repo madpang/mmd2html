@@ -7,7 +7,7 @@
  * - updated on 2025-06-29
  */
 
-package dev.madpang.util;
+package util;
 
 import java.io.IOException;
 

@@ -5,7 +5,7 @@
  * @date: [created: 2025-06-09, updated: 2026-04-19]
  */
 
-package dev.madpang.ast.blocks;
+package ast.blocks;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -15,7 +15,7 @@ import java.util.regex.Pattern;
 import java.util.regex.Matcher;
 import java.util.Optional;
 
-import dev.madpang.util.CommonUtil;
+import util.CommonUtil;
 
 /**
  * Represents a *fenced* code block.

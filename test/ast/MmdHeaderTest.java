@@ -7,7 +7,7 @@
  * @date: [created: 2025-08-03, updated: 2025-08-03]
  */
 
-package dev.madpang.ast;
+package ast;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.DisplayName;

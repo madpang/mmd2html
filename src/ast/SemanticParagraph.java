@@ -7,7 +7,7 @@
  * - updated on 2025-07-11
  */
 
-package dev.madpang.ast;
+package ast;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.Optional;
 
-import dev.madpang.ast.blocks.*;
+import ast.blocks.*;
 
 public class SemanticParagraph {
 	private List<IBlock> blocks = new ArrayList<>();

@@ -11,4 +11,3 @@ plugins {
 }
 
 rootProject.name = "mmd2html"
-include("app")

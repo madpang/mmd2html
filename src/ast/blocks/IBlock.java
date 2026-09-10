@@ -7,7 +7,7 @@
  * - updated on 2025-07-11
  */
 
-package dev.madpang.ast.blocks;
+package ast.blocks;
 
 import java.io.IOException;
 import java.util.List;

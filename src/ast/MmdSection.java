@@ -7,7 +7,7 @@
  * - updated on 2025-06-29
  */
 
-package dev.madpang.ast;
+package ast;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
 
-import dev.madpang.util.CommonUtil;
+import util.CommonUtil;
 
 public class MmdSection {
 	public int sectionLevel;

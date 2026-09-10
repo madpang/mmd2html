@@ -13,7 +13,7 @@
 
 import java.util.Scanner;
 
-import dev.madpang.ast.MmdDocument;
+import ast.MmdDocument;
 
 public class MmdConverter {
 	public static void main(String[] args) throws Exception {

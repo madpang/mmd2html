@@ -10,13 +10,13 @@
  * It does NOT provide a static `parse` method to read from a text stream and return an instance, instead, it should be controlled carefully by its caller---the SemanticParagraph class.
  */
 
-package dev.madpang.ast.blocks;
+package ast.blocks;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import dev.madpang.util.CommonUtil;
+import util.CommonUtil;
 
 /**
  * Represents a plain paragraph block -- serves as fallback for any content.

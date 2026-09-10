@@ -5,7 +5,7 @@
  * @date: [created: 2025-06-09, updated: 2025-08-03]
  */
 
-package dev.madpang.ast;
+package ast;
 
 import java.io.BufferedReader;
 import java.io.IOException;
