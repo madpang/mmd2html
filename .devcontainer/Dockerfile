@@ -3,7 +3,7 @@
 # @file: Dockerfile
 # @brief: Set up the dev. env. for mmd2html build toolchain.
 # @author: [t-tang-rfc]
-# @date: [created: 2026-09-06, updated: 2026-09-06]
+# @date: [created: 2026-09-06, updated: 2026-09-10]
 # /////////////////////////////////////////////////////////////
 
 # === Use an official Ubuntu 24.04 (noble numbat) as a base image 
@@ -32,7 +32,7 @@ RUN <<-EOT
 	apt-get install -y --no-install-recommends \
 		tzdata \
 		wget gnupg ca-certificates \
-		openssh-client git nano tmux \
+		openssh-client git emacs-nox tmux \
 		sudo \
 		apt-transport-https software-properties-common
 	wget -qO - https://packages.adoptium.net/artifactory/api/gpg/key/public | gpg --dearmor -o /usr/share/keyrings/adoptium.gpg \

@@ -13,6 +13,7 @@
 				"redhat.java",
 				"vscjava.vscode-gradle",
 				"eamodio.gitlens",
+				"ms-vscode.live-server",
 				"ericmccarthy.vs-code-mark-point"
 			]
 		}
