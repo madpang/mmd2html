@@ -12,15 +12,19 @@ Run the examples from the repository root in a POSIX shell, such as Bash on Linu
 No separate Gradle installation is needed.
 The wrapper uses Gradle 8.14.2 and downloads Gradle and dependencies on its first run, so network access is needed.
 
-```sh
-./gradlew build
+``` terminal
+|-[ubuntu@4f0ef90f2eed:/mnt/datastore/cowork/20_repo/mmd2html][]
+: ./gradlew build
+|-[2026-09-10T15:07:19+09:00][o][]
 ```
 
 This compiles the application, runs the JUnit tests, and creates `build/libs/mmd2html.jar`.
 Application distributions are under `build/distributions/` and compiled classes are under `build/classes/java/main/`.
+Use `./gradlew installDist` to create `build/install/mmd2html/bin/mmd2html`.
+
 Use `./gradlew test` to run the test task and its prerequisites.
 The test report is at `build/reports/tests/test/index.html`.
-On Windows, use `gradlew.bat build` for the wrapper build.
+
 
 ## Build with plain JDK tools
 
@@ -28,11 +32,13 @@ The application source uses only JDK classes and classes in this repository.
 Gradle declares Guava, but the current application does not use it.
 With JDK 21, you can compile and package the application without Gradle or downloaded libraries:
 
-```sh
-mkdir -p build/plain/classes
-find src -name '*.java' -print > build/plain/sources.txt
-javac --release 21 -encoding UTF-8 -d build/plain/classes @build/plain/sources.txt
-jar --create --file build/plain/mmd2html.jar --main-class MmdConverter -C build/plain/classes .
+``` terminal
+|-[ubuntu@4f0ef90f2eed:/mnt/datastore/cowork/20_repo/mmd2html][]
+: mkdir -p build/plain/classes
+: find src -name '*.java' -print > build/plain/sources.txt
+: javac --release 21 -encoding UTF-8 -d build/plain/classes @build/plain/sources.txt
+: jar --create --file build/plain/mmd2html.jar --main-class MmdConverter -C build/plain/classes .
+|-[2026-09-10T15:07:19+09:00][o][]
 ```
 
 This builds only the application, without compiling or running the JUnit tests.
@@ -113,30 +119,27 @@ Use direct `java` execution for interactive input.
 
 ## Repository structure
 
-```text
+``` tree
 mmd2html/
-|-- src/
-|   |-- MmdConverter.java
-|   |-- ast/
-|   |   `-- blocks/
-|   `-- util/
-|-- test/
-|   `-- ast/
-|       `-- blocks/
-|-- build/                 (generated and ignored)
-|-- build.gradle.kts
-|-- settings.gradle.kts
-|-- gradle/
-|-- gradlew
-`-- docs/
+|- src/
+|  |- MmdConverter.java
+|  |- ast/
+|  |  |- blocks/
+|  |- util/
+|- test/
+|  |- ast/
+|  |  |- blocks/
+|- build/                # <- generated and ignored
+|- build.gradle.kts
+|- settings.gradle.kts
+|- gradle/
+|- gradlew
+|- docs/
 ```
 
-The repository is one Gradle project with application sources in `src/` and tests in `test/`.
+The repository is a Gradle project with application sources in `src/` and tests in `test/`.
 Java packages are `ast`, `ast.blocks`, and `util`.
-The entry point remains `MmdConverter`.
-See [the structure and migration notes](docs/structure-proposal.md) for build settings and changes from the old layout.
-Gradle application archives and installed launchers now use the name `mmd2html`.
-Use `./gradlew installDist` to create `build/install/mmd2html/bin/mmd2html`.
+The entry point is `MmdConverter`.
 
 ## Earlier design notes
 
