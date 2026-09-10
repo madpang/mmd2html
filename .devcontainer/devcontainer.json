@@ -1,0 +1,20 @@
+{
+	"name": "mmd2html",
+	"image": "mmd2html-dev:latest",
+	"runArgs": [
+		"--mount", "type=bind,src=${localEnv:HOME}/.gnupg,dst=/home/ubuntu/.gnupg,readonly",
+		"--mount", "type=bind,src=/run/user/1000/gnupg,dst=/run/user/1000/gnupg,readonly"
+	],	
+	"workspaceMount": "type=bind,src=${localWorkspaceFolder},target=/mnt/datastore/cowork/20_repo/${localWorkspaceFolderBasename}",
+	"workspaceFolder": "/mnt/datastore/cowork/20_repo/${localWorkspaceFolderBasename}",
+	"customizations": {
+		"vscode": {
+			"extensions": [
+				"redhat.java",
+				"vscjava.vscode-gradle",
+				"eamodio.gitlens",
+				"ericmccarthy.vs-code-mark-point"
+			]
+		}
+	}
+}
