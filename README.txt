@@ -1,3 +1,9 @@
+---
+file: README.txt
+author: [madpang, t-tang-rfc, codex]
+date: [created: 2025-05-17, updated: 2026-09-10]
+---
+
 # mmd2html
 
 **mmd2html** converts custom plain text markup to an HTML body fragment.
@@ -70,9 +76,6 @@ This is a paragraph.
 System.out.println("Hello");
 ```
 ````
-
-The bundled `example-mmd-doc.txt` uses older `+++` fences and multiline dates that the current parser rejects.
-Use the example above with these commands.
 
 After a Gradle build:
 
