@@ -1,7 +1,7 @@
 ---
 file: README.txt
-author: [madpang, t-tang-rfc, codex]
-date: [created: 2025-05-17, updated: 2026-09-10]
+author: [madpang, t-tang-rfc, codex, claude]
+date: [created: 2025-05-17, updated: 2026-09-13]
 ---
 
 # mmd2html
@@ -43,7 +43,7 @@ With JDK 21, you can compile and package the application without Gradle or downl
 : mkdir -p build/plain/classes
 : find src -name '*.java' -print > build/plain/sources.txt
 : javac --release 21 -encoding UTF-8 -d build/plain/classes @build/plain/sources.txt
-: jar --create --file build/plain/mmd2html.jar --main-class MmdConverter -C build/plain/classes .
+: jar --create --file build/plain/mmd2html.jar --main-class mmd2html.MmdConverter -C build/plain/classes .
 |-[2026-09-10T15:07:19+09:00][o][]
 ```
 
@@ -108,7 +108,7 @@ java -jar build/libs/mmd2html.jar
 You can also run the compiled classes directly:
 
 ```sh
-java -cp build/classes/java/main MmdConverter build/sample.txt build/sample.html
+java -cp build/classes/java/main mmd2html.MmdConverter build/sample.txt build/sample.html
 ```
 
 For Gradle execution, supply both paths relative to the repository root:
@@ -125,14 +125,16 @@ Use direct `java` execution for interactive input.
 ``` tree
 mmd2html/
 |- src/
-|  |- MmdConverter.java
-|  |- ast/
-|  |  |- blocks/
-|  |- util/
+|  |- mmd2html/             # package mmd2html
+|  |  |- MmdConverter.java
+|  |  |- ast/               # package mmd2html.ast
+|  |  |  |- blocks/         # package mmd2html.ast.blocks
+|  |  |- util/              # package mmd2html.util
 |- test/
-|  |- ast/
-|  |  |- blocks/
-|- build/                # <- generated and ignored
+|  |- mmd2html/
+|  |  |- ast/
+|  |  |  |- blocks/
+|- build/                   # auto-generated and ignored
 |- build.gradle.kts
 |- settings.gradle.kts
 |- gradle/
@@ -141,8 +143,9 @@ mmd2html/
 ```
 
 The repository is a Gradle project with application sources in `src/` and tests in `test/`.
-Java packages are `ast`, `ast.blocks`, and `util`.
-The entry point is `MmdConverter`.
+Java packages are `mmd2html`, `mmd2html.ast`, `mmd2html.ast.blocks`, and `mmd2html.util`.
+The folder path under `src/` and `test/` mirrors the package name, see `docs/package-layout.md`.
+The entry point is `mmd2html.MmdConverter`.
 
 ## Earlier design notes
 

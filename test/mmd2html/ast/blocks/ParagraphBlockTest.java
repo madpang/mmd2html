@@ -1,15 +1,11 @@
 /**
  * @file: ParagraphBlockTest.java
  * @brief: Unit tests for ParagraphBlock class
- * @author:
- * - Claude Sonnet 4 (AI)
- * - madpang
- * @date:
- * - created on 2025-07-11
- * - updated on 2025-07-11
+ * @author: [claude, madpang]
+ * @date: [created: 2025-07-11, updated: 2025-07-11]
  */
 
-package ast.blocks;
+package mmd2html.ast.blocks;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeEach;

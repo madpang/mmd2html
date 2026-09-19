@@ -2,12 +2,10 @@
  * @file: MmdSection.java
  * @brief: Represents a section in the MMD document.
  * @author: madpang
- * @date:
- * - created on 2025-06-09
- * - updated on 2025-06-29
+ * @date: [created: 2025-06-09, updated: 2025-06-29]
  */
 
-package ast;
+package mmd2html.ast;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -16,7 +14,7 @@ import java.util.ArrayList;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
 
-import util.CommonUtil;
+import mmd2html.util.CommonUtil;
 
 public class MmdSection {
 	public int sectionLevel;
@@ -27,11 +25,11 @@ public class MmdSection {
 
 	/**
 	 * @note:
-	 * A MMD doc must have a "body" of main content, which is enclosed by one and only one level-1 heading (e.g. "# My Heading") and may optionally contain multiple subheadings (level-2, level-3, etc.).
+	 * A MMD doc must have a *body* of main content, which is enclosed by one and only one level-1 heading (e.g. "# My Heading"), and may optionally contain multiple sub-headings (level-2, level-3, etc.).
 	 * Semantic paragraphs always come BEFORE any sub-sections, and they are separated by blank lines.
 	 *
 	 * @details:
-	 * A real MMD "body" looks like
+	 * A real MMD *body* looks like
 	 * ----------------------------------------------------------------
 	 * |                                                              |
 	 * | # The ONE AND ONLY Level-1 Heading                           | <- 1st line

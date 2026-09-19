@@ -1,6 +1,6 @@
-# Unit Tests for ast.blocks Package
+# Unit Tests for mmd2html.ast.blocks Package
 
-This directory contains comprehensive unit tests for the `ast.blocks` package.
+This directory contains comprehensive unit tests for the `mmd2html.ast.blocks` package.
 The test suite covers code blocks and paragraphs.
 
 ## Test Files
@@ -43,17 +43,17 @@ Tests the `ParagraphBlock` class which represents paragraph content.
 Run these commands from the repository root.
 
 To run all tests:
-```bash
+``` bash
 ./gradlew test
 ```
 
 To run tests for a specific class:
-```bash
-./gradlew test --tests "ast.blocks.CodeBlockTest"
+``` bash
+./gradlew test --tests "mmd2html.ast.blocks.CodeBlockTest"
 ```
 
 To run with detailed output:
-```bash
+``` bash
 ./gradlew test --info
 ```
 
@@ -64,7 +64,7 @@ The tests use JUnit 5 (Jupiter) framework as configured in the project's `build.
 - `testRuntimeOnly("org.junit.platform:junit-platform-launcher")`
 
 The test task is configured to use JUnit Platform:
-```kotlin
+``` kotlin
 tasks.named<Test>("test") {
     useJUnitPlatform()
 }

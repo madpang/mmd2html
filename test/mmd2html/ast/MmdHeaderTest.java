@@ -1,13 +1,11 @@
 /**
  * @file: MmdHeaderTest.java
  * @brief: Unit tests for MmdHeader class
- * @author:
- * - GitHub Copilot (AI)
- * - madpang
+ * @author: [copilot, madpang]
  * @date: [created: 2025-08-03, updated: 2025-08-03]
  */
 
-package ast;
+package mmd2html.ast;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.DisplayName;

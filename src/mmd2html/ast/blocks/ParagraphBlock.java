@@ -1,37 +1,30 @@
 /**
  * @file: ParagraphBlock.java
- * @brief: Represents a paragraph in the document
+ * @brief: Represents a plain paragraph block in the document.
  * @author: madpang
- * @date:
- * - created on 2025-06-09
- * - updated on 2025-07-11
+ * @date: [created: 2025-06-09, updated: 2025-07-11]
  * @note:
- * ParagraphBlock is a *special* block in terms of parsing---it is the fallback block type that captures any non-empty content.
+ * ParagraphBlock is a *special* block in terms of parsing --- it is the fallback block type that captures any non-empty content.
  * It does NOT provide a static `parse` method to read from a text stream and return an instance, instead, it should be controlled carefully by its caller---the SemanticParagraph class.
  */
 
-package ast.blocks;
+package mmd2html.ast.blocks;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import util.CommonUtil;
+import mmd2html.util.CommonUtil;
 
-/**
- * Represents a plain paragraph block -- serves as fallback for any content.
- */
 public final class ParagraphBlock implements IBlock {
-	/**
-	 * Self-identifying
-	 */
+	// Self-identifying
 	public static final String BLOCK_TYPE = "paragraph";
 	// Sentence lines of the paragraph
 	private List<String> sentenceLines = new ArrayList<>();
 
-	/* default implicit constructor */
+	/* Default implicit constructor */
 
-	/* interface behavior --------------------------------------------------- */
+	/* Interface behavior --------------------------------------------------- */
 	@Override
 	public String getType() {
 		return BLOCK_TYPE;
@@ -54,7 +47,7 @@ public final class ParagraphBlock implements IBlock {
 		return htmlLines;
 	}
 
-	/* instance behavior ---------------------------------------------------- */
+	/* Instance behavior ---------------------------------------------------- */
 	public void addLine(String line) throws IOException {
 		if (line == null || line.trim().isEmpty()) {
 			throw new IOException("[ERROR] HTML paragraph cannot contain blank or null lines");

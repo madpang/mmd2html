@@ -2,21 +2,16 @@
  * @file: CommonUtil.java
  * @brief: Utility class for the MMD to HTML conversion.
  * @author: madpang
- * @date:
- * - created on 2025-06-29
- * - updated on 2025-06-29
+ * @date: [created: 2025-06-29, updated: 2025-06-29]
  */
 
-package util;
+package mmd2html.util;
 
 import java.io.IOException;
 
-/**
- * Utility class for parsing and conversion operations.
- */
 public class CommonUtil {
 	/**
-	 * Escapes HTML special characters in the given text.
+	 * @brief: Escapes HTML special characters in the given text.
 	 */
 	public static String escapeHTML(String text) throws IOException{
 		if (text == null) {

@@ -2,12 +2,10 @@
  * @file: SemanticParagraph.java
  * @brief: Represents a semantic paragraph in a section of the document.
  * @author: madpang
- * @date:
- * - created on 2025-06-09
- * - updated on 2025-07-11
+ * @date: [created: 2025-06-09, updated: 2025-07-11]
  */
 
-package ast;
+package mmd2html.ast;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -15,7 +13,7 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.Optional;
 
-import ast.blocks.*;
+import mmd2html.ast.blocks.*;
 
 public class SemanticParagraph {
 	private List<IBlock> blocks = new ArrayList<>();
@@ -32,7 +30,7 @@ public class SemanticParagraph {
 	 * @details:
 	 * In a MMD doc, semantic paragraphs are typically formed by multiple lines of text that are grouped together, separated by blank lines.
 	 * This class is created to address the lack of such a structure in Markdown, or in HTML.
-	 * In modern writing, images, lists, tables etc. are all linked together to form a semantic context---while Markdown only considers the textual structure.
+	 * In modern writing, images, lists, tables etc. are all linked together to form a semantic context --- while Markdown only considers the textual structure.
 	 */
 	public static SemanticParagraph parse(BufferedReader reader, String firstLine) throws IOException {
 		// [1] firstLine can not be null, can not be empty
@@ -77,7 +75,7 @@ public class SemanticParagraph {
 	}
 
 	/**
-	 * Converts this semantic paragraph to HTML.
+	 * @brief: Converts this semantic paragraph to HTML.
 	 */
 	public List<String> toHTML() throws IOException {
 		if (blocks.isEmpty()) {

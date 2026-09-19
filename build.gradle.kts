@@ -34,14 +34,14 @@ java {
 
 application {
     // Define the main class for the application.
-    mainClass = "MmdConverter"
+    mainClass = "mmd2html.MmdConverter"
 }
 
 tasks.named<Jar>("jar") {
     archiveBaseName = "mmd2html"
     manifest {
         attributes(
-            "Main-Class" to "MmdConverter"
+            "Main-Class" to "mmd2html.MmdConverter"
         )
     }
 }

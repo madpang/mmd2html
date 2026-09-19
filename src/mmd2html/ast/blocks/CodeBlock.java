@@ -1,11 +1,11 @@
 /**
  * @file: CodeBlock.java
- * @brief: Represents a code block in the document.
+ * @brief: Represents a fenced code block in the document.
  * @author: madpang
  * @date: [created: 2025-06-09, updated: 2026-04-19]
  */
 
-package ast.blocks;
+package mmd2html.ast.blocks;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -15,15 +15,10 @@ import java.util.regex.Pattern;
 import java.util.regex.Matcher;
 import java.util.Optional;
 
-import util.CommonUtil;
+import mmd2html.util.CommonUtil;
 
-/**
- * Represents a *fenced* code block.
- */
 public final class CodeBlock implements IBlock {
-	/**
-	 * Self-identifying
-	 */
+	// Self-identifying
 	public static final String BLOCK_TYPE = "code";
 	/**
 	 * @note:
@@ -36,13 +31,13 @@ public final class CodeBlock implements IBlock {
 	// Real content of the code block.
 	private List<String> codeLines;
 
-	/* constructor (accessible only within the same package, for test) ------ */
+	/* Constructor (accessible only within the same package, for test) ------ */
 	CodeBlock(List<String> contentLines, String fenceTag) {
 		this.codeType = fenceTag;
 		this.codeLines = contentLines;
 	}
 
-	/* interface behavior --------------------------------------------------- */
+	/* Interface behavior --------------------------------------------------- */
 	@Override
 	public String getType() {
 		return BLOCK_TYPE;
@@ -62,12 +57,12 @@ public final class CodeBlock implements IBlock {
 		return htmlLines;
 	}
 
-	/* instance behavior --------------------------------------------------- */
+	/* Instance behavior --------------------------------------------------- */
 	String getCodeType() {
 		return codeType;
 	}
 
-	/* static factory / parser --------------------------------------------- */
+	/* Static factory / parser --------------------------------------------- */
 	public static Optional<IBlock> parse(BufferedReader reader, String firstLine) throws IOException {
 		Pattern codeBlockStart = Pattern.compile("^`{3} (\\S+)$");
 		Matcher matcher = codeBlockStart.matcher(firstLine);
@@ -92,6 +87,6 @@ public final class CodeBlock implements IBlock {
 		return Optional.of(new CodeBlock(content, tag));
 	}
 
-	/* static parser object to register globally --------------------------- */
+	/* Static parser object to register globally --------------------------- */
 	public static final BlockParser PARSER = CodeBlock::parse;
 }

@@ -5,7 +5,7 @@
  * @date: [created: 2025-06-09, updated: 2025-08-03]
  */
 
-package ast;
+package mmd2html.ast;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -17,10 +17,10 @@ import java.util.regex.Matcher;
 public class MmdHeader {
 	/**
 	 * @note:
-	 * A MMD doc must have a header block for meta information, which has the fields of ["file", "brief", "title", "author", "date-created", "date-updated", and "version"].
+	 * A MMD doc must have a *header* block for meta information, which has the fields of ["file", "brief", "title", "author", "date", and "version"].
 	 * 
 	 * @details:
-	 * A real MMD header block looks like
+	 * A real MMD *header* block looks like
 	 * ----------------------------------------------------------------
 	 * |                                                              |
 	 * | ``` header                                                   | <- 1st line
@@ -36,7 +36,7 @@ public class MmdHeader {
 	 *   |
 	 *   v
 	 *  1st column, start with no space before '@'
-	 */
+     */
 	public Map<String, String> metaInfo = new HashMap<>();
 
 	/**
@@ -78,7 +78,7 @@ public class MmdHeader {
 							header.metaInfo.put("author", value.trim());
 							break;
 						case "date":
-							// @note: date field now uses format: [created: YYYY-MM-DD, updated: YYYY-MM-DD]
+							// @note: date field uses format `[created: yyyy-mm-dd, updated: yyyy-mm-dd]`.
 							String dateValue = value.trim();
 							Pattern datePattern = Pattern.compile("^\\[created: (\\d{4}-\\d{2}-\\d{2}), updated: (\\d{4}-\\d{2}-\\d{2})\\]$");
 							Matcher dateMatcher = datePattern.matcher(dateValue);
@@ -135,6 +135,7 @@ public class MmdHeader {
 
 	/**
 	 * @brief: A self-validation method to ensure the header contains all required fields.
+	 * @return: `true` if all required fields are present, `false` otherwise.
 	 */
 	private Boolean selfValidation() {
 		String[] requiredFields = {

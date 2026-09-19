@@ -1,13 +1,14 @@
 /**
  * @file: MmdDocument.java
- * @brief: Represents the entire mmd-markup document structure, including the header and body.
+ * @brief: Represents the entire MMD-markup document structure, including the header and body.
  * @author: madpang
  * @details:
- * This class is the overarching structure for this mmd-to-html converter, it parses the mmd document into AST nodes, and reconstructs the HTML from the AST representation.
+ * This class is the overarching structure for this MMD-to-HTML converter, it parses the MMD document into AST nodes, and reconstructs the HTML from the AST representation.
+ * It contains two methods --- `parse` for parsing MMD documents, and `toHTML` for converting to HTML.
  * @date: [created: 2025-06-09, updated: 2025-08-03]
  */
 
-package ast;
+package mmd2html.ast;
 
 import java.io.FileWriter;
 import java.io.BufferedWriter;
@@ -22,10 +23,10 @@ public class MmdDocument {
 	public MmdSection bodyContent = new MmdSection(); // root section (level-1) of the body
 
 	/**
-	 * @brief: Parses a MmdDocument from a BufferedReader, with an optional first line being supplied.
+	 * @brief: Parses a MmdDocument from a BufferedReader, with optionally the first line being supplied.
 	 *
-	 * @param[in]: reader -- The BufferedReader to read the document from.
-	 * @param[in]: firstLine -- The first line, or null to read from the reader.
+	 * @param[in]: reader --- The BufferedReader that reads the document.
+	 * @param[in]: firstLine --- The first line, or null to read from the reader.
 	 * @return: A MmdDocument object containing the parsed header and body.
 	 * @throws: IOException If an I/O error occurs while reading the document.
 	 * 
@@ -59,6 +60,7 @@ public class MmdDocument {
 
 	/**
 	 * @brief: An overloaded `parse` method, with a a single argument.
+	 * @param[in]: reader --- The BufferedReader that reads the document.
 	 */
 	public static MmdDocument parse(BufferedReader reader) throws IOException {
 		return parse(reader, null);
@@ -66,8 +68,7 @@ public class MmdDocument {
 
 	/**
 	 * @brief: An overloaded `parse` method that takes a file path as input.
-	 * 
-	 * @param[in]: filePath -- The path to the MMD file to parse.
+	 * @param[in]: filePath --- The path to the MMD file to parse.
 	 */
 	public static MmdDocument parse(String filePath) throws IOException {
 		try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
@@ -76,7 +77,7 @@ public class MmdDocument {
 	}
 
 	/**
-	 * Converts the MMD document to HTML.
+	 * @brief: Converts the MMD document to HTML.
 	 * @return: A list of strings representing the HTML lines.
 	 * @throws: IOException If an I/O error occurs while converting to HTML.
 	 */
@@ -94,8 +95,7 @@ public class MmdDocument {
 
 	/**
 	 * @brief: An overloaded `toHTML` method that writes HTML output directly to a file.
-	 * 
-	 * @param[in]: filePath -- The path to the output HTML file.
+	 * @param[in]: filePath --- The path to the output HTML file.
 	 */
 	public void toHTML(String filePath) throws IOException {
 		try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {

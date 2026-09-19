@@ -1,19 +1,21 @@
 /**
  * @file: MmdConverter.java
- * @brief: Main application class for the Mmd to HTML conversion.
+ * @brief: Main class for the MMD to HTML conversion app.
+ * @author: madpang
+ * 
  * @details:
  * This class serves as the entry point for the MMD to HTML conversion application.
  * It is a wrapper which calls the MmdDocument to parse the MMD document and converts it to HTML.
  * It also provides an interactive mode if no arguments are provided.
- * @author: madpang
- * @date:
- * - created on 2025-06-09
- * - updated on 2025-07-01
+ * 
+ * @date: [created: 2025-06-09, updated: 2025-07-01]
  */
+
+package mmd2html;
 
 import java.util.Scanner;
 
-import ast.MmdDocument;
+import mmd2html.ast.MmdDocument;
 
 public class MmdConverter {
 	public static void main(String[] args) throws Exception {
