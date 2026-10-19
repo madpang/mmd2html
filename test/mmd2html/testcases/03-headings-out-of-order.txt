@@ -1,0 +1,16 @@
+---
+file: 03-headings-out-of-order.txt
+brief: Test non-canonical mmd.
+details: Headings out of the canonical order are still parsed. The parser parses everything; a `###` may come before a `#`, the check is left for later.
+note: The text contains excerpts from "Gabriel Garcia Marquez, *One Hundred Years of Solitude* (1967)".
+---
+
+### Macondo
+
+Macondo was then a village of twenty adobe houses.
+
+## The Buendia family
+
+# One Hundred Years of Solitude
+
+Many years later, as he faced the firing squad, Colonel Aureliano Buendia was to remember that distant afternoon.

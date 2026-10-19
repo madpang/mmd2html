@@ -1,0 +1,29 @@
+---
+file: 05-meta-info-anywhere.txt
+brief: Test mmd with meta info block.
+details: A MetaInfo block can be anywhere and is not rendered. A block of its own gives no <s-paragraph>; a block inside text splits the <p> but stays invisible. A blank line inside a block belongs to the block; only the closing `---` ends it.
+note: The text contains excerpts from "Herman Melville, *Moby-Dick* (1851)".
+---
+
+# Ship's log
+
+---
+ship: Pequod
+captain: Ahab
+---
+
+The whale is white.
+---
+note: this line is not shown
+---
+The sea is wide & deep, and 3 < 4 > 2.
+
+## Test blank line inside a MetaInfo block
+
+---
+crew: Starbuck, Stubb, Flask
+
+harpooneer: Queequeg
+---
+
+Queequeg was a native of Kokovoko.

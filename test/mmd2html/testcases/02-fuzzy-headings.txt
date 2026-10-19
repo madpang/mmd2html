@@ -1,0 +1,22 @@
+---
+file: 02-fuzzy-headings.txt
+brief: Test mmd with fuzzy headings.
+details: Fuzzy headings take their level from the explicit heading above. `===` is one level below, `---` is two levels below, or one level below a `===`.
+note: The text contains excerpts from "Liu Cixin, *The Three-Body Problem* (2008)".
+---
+
+## The Three-Body Problem
+
+=== Red Coast
+
+A signal goes out to the stars.
+
+--- The answer
+
+Do not answer!
+
+=== Three Body
+
+--- The game
+
+A sun rises, then three.

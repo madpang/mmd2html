@@ -1,0 +1,11 @@
+---
+file: 00-plain-paragraphs.txt
+brief: Test plain paragraph only mmd.
+details: Text without any heading stays in the level-0 section. Blank lines split semantic paragraphs; lines next to each other share one <p>.
+note: The text contains excerpts from "Herman Melville, *Moby-Dick* (1851)".
+---
+
+Call me Ishmael.
+Some years ago -- never mind how long precisely -- having little or no money in my purse, and nothing particular to interest me on shore, I thought I would sail about a little and see the watery part of the world.
+
+It is a way I have of driving off the spleen, and regulating the circulation.

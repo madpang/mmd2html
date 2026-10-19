@@ -1,0 +1,24 @@
+---
+file: 04-code-block.txt
+brief: Test mmd with code block.
+details: A code block keeps blank lines and heading-like text inside. Only the closing ``` ends the block; text and code next to each other share one <s-paragraph>. A fence that closes right away is allowed (empty code block).
+note: The text contains excerpts from "Mikhail Sholokhov, *And Quiet Flows the Don* (1928)".
+---
+
+# And Quiet Flows the Don
+
+The river log of the Melekhov farm:
+``` text
+# not a heading
+
+=== not a heading either
+if (flow > bank) { flood(); }
+```
+
+The Don flows on.
+
+## Test empty code block
+
+The following is an empty code block:
+``` C++
+```

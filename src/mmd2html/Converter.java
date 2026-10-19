@@ -1,23 +1,22 @@
 /**
- * @file: MmdConverter.java
- * @brief: Main class for the MMD to HTML conversion app.
- * @author: madpang
+ * @file Converter.java
+ * @brief Main class for the MMD to HTML conversion app.
+ * @author [madpang, t-tang-rfc]
+ * @date [created: 2025-06-09, updated: 2026-10-05]
  * 
- * @details:
- * This class serves as the entry point for the MMD to HTML conversion application.
- * It is a wrapper which calls the MmdDocument to parse the MMD document and converts it to HTML.
- * It also provides an interactive mode if no arguments are provided.
+ * @details This class serves as the entry point for the MMD to HTML conversion application.
+ * @details It is a wrapper which calls MmdDocSection to parse the MMD document and converts it to HTML.
+ * @details It also provides an interactive mode if no arguments are provided.
  * 
- * @date: [created: 2025-06-09, updated: 2025-07-01]
- */
+**/
 
 package mmd2html;
 
 import java.util.Scanner;
 
-import mmd2html.ast.MmdDocument;
+import mmd2html.ast.MmdDocSection;
 
-public class MmdConverter {
+public class Converter {
 	public static void main(String[] args) throws Exception {
 		/// Argument parsing
 		String inputFilePath = null;
@@ -39,7 +38,7 @@ public class MmdConverter {
 					inputFilePath = scanner.nextLine();
 				} while (inputFilePath.trim().isEmpty());
 				// Get output file path
-				System.out.println("> Enter path to output file (or press Enter for stdout): ");
+				System.out.println("> Enter path to output file: ");
 				outputFilePath = scanner.nextLine();
 			}
 		} else if (args.length == 2) {
@@ -47,15 +46,11 @@ public class MmdConverter {
 			outputFilePath = args[1];
 		} else {
 			// Just print error message and exit
-			System.err.println("Usage: java MmdConverter <input-file> [<output-file>]");
+			System.err.println("Usage: java Converter <input-file> [<output-file>]");
 			System.exit(1);
 		}
 
 		/// Call the converter
-		if (outputFilePath != null && !outputFilePath.trim().isEmpty()) {
-			MmdDocument.parse(inputFilePath).toHTML(outputFilePath);
-		} else {
-			MmdDocument.parse(inputFilePath).toHTML().forEach(System.out::println);
-		}
+		MmdDocSection.parse(inputFilePath).toHTML(outputFilePath);
 	}
 }

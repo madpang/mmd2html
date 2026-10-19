@@ -2,7 +2,7 @@
 file: package-layout.md
 brief: How the folder structure relates to the Java package structure.
 author: [claude, t-tang-rfc]
-date: [created: 2026-09-13, updated: 2026-09-13]
+date: [created: 2026-09-13, updated: 2026-10-14]
 ---
 
 # Folder structure vs. package structure
@@ -19,11 +19,12 @@ The source root for application code is `src/`, and the source root for tests is
 |---|---|---|
 | `mmd2html` | `src/mmd2html/` | `test/mmd2html/` |
 | `mmd2html.ast` | `src/mmd2html/ast/` | `test/mmd2html/ast/` |
-| `mmd2html.ast.blocks` | `src/mmd2html/ast/blocks/` | `test/mmd2html/ast/blocks/` |
+| `mmd2html.ast.blocks` | `src/mmd2html/ast/blocks/` | (none now) |
 | `mmd2html.util` | `src/mmd2html/util/` | (none yet) |
 
 A test class lives in the same package as the class it tests.
-So `test/mmd2html/ast/blocks/CodeBlockTest.java` declares `package mmd2html.ast.blocks;`, the same as `src/mmd2html/ast/blocks/CodeBlock.java`.
+So `test/mmd2html/ast/MmdDocSectionTest.java` declares `package mmd2html.ast;`, the same as `src/mmd2html/ast/MmdDocSection.java`.
+Test case files live in `test/mmd2html/testcases/`, and the benchmark template in `test/mmd2html/misc/`; they are plain folders, not packages.
 
 ## Why the folders must match
 
@@ -49,7 +50,7 @@ sourceSets {
 
 The roots stay `src` and `test`.
 The `mmd2html/` folder below them is part of the package path, not a source root.
-The entry point is referenced by its full name, `mmd2html.MmdConverter`, in both `application.mainClass` and the jar `Main-Class` attribute.
+The entry point is referenced by its full name, `mmd2html.Converter`, in both `application.mainClass` and the jar `Main-Class` attribute.
 
 ## How to add a new package
 

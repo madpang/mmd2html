@@ -1,0 +1,24 @@
+---
+file: 01-explicit-headings.txt
+brief: Test mmd with explicit headings.
+details: Explicit headings nest by the number of `#`. A deeper heading pushes in, a same or higher one pops out to the right parent.
+note: The text contains excerpts from "Miguel de Cervantes, *Don Quixote* (1605, 1615)".
+---
+
+# Don Quixote
+
+In a village of La Mancha, the name of which I have no desire to call to mind, there lived not long since one of those gentlemen that keep a lance in the lance-rack.
+
+## Part One
+
+### Chapter I
+
+Which treats of the character and pursuits of the famous gentleman Don Quixote of La Mancha.
+
+### Chapter VIII
+
+Of the good fortune which the valiant Don Quixote had in the terrible and undreamt-of adventure of the windmills.
+
+## Part Two
+
+Ten years later, the knight rides out again.

@@ -1,157 +1,127 @@
 ---
 file: README.txt
 author: [madpang, t-tang-rfc, codex, claude]
-date: [created: 2025-05-17, updated: 2026-09-13]
+date: [created: 2025-05-17, updated: 2026-10-15]
 ---
 
 # mmd2html
 
-**mmd2html** converts custom plain text markup to an HTML body fragment.
+**mmd2html** converts plain text with custom markup to an HTML body fragment.
 It does not add a full HTML page, styles, or rendered header metadata.
-This branch supports headings, paragraphs, and fenced code blocks.
-The inline code, list, and image features from the separate feature branches are not included here.
+This branch supports headings, semantic paragraphs, fenced code blocks, simple lists (two levels at most), em dashes in headings, paragraphs and lists, and opaque MetaInfo chunks.
+See `docs/parser-flow.md` for cursor ownership and metadata recognition rules.
+The inline code and image features from the separate feature branches are not included here.
 
-## Build with the Gradle Wrapper
+## What is MMD
 
-Install JDK 21 and put `java` and `javac` on PATH.
-Run the examples from the repository root in a POSIX shell, such as Bash on Linux.
-No separate Gradle installation is needed.
-The wrapper uses Gradle 8.14.2 and downloads Gradle and dependencies on its first run, so network access is needed.
+MMD is not an acronym.
+However, it might be interpreted as *Modified Markdown Document* or *Minimal Markup Document*.
 
+## Repository structure
+
+The following ASCII graph depicts the structure of this repo.:
+``` tree
+mmd2html/
+|- README.txt                          # This doc
+|- docs/
+|- src/
+|  |- mmd2html/
+|  |  |- Converter.java
+|  |  |- ast/
+|  |  |  |- MmdDocSection.java
+|  |  |  |- SemanticParagraph.java
+|  |  |  |- blocks/
+|  |  |  |  |- IBlock.java
+|  |  |  |  |- ParagraphBlock.java
+|  |  |  |  |- CodeBlock.java
+|  |  |  |  |- ListBlock.java
+|  |  |  |  |- MetaInfoBlock.java
+|  |  |- util/
+|  |  |  |  |- LineCursor.java
+|  |  |  |  |- CommonUtil.java
+|- test/
+|  |- mmd2html/
+|  |  |- ast/
+|  |  |  |- MmdDocSectionTest.java
+|  |  |- testcases/...                 # input files and benchmark pages
+|  |  |- misc/...                      # template for benchmark pages
+|- build/...
+|- gradle/...                          # Gradle related stuff
+|- ...
+|- .devcontainer                       # Development Container config.
+```
+
+## Build mmd2html
+
+mmd2html is a simple Java project, which you can build with plain JDK tools.
+Or, if you are familiar with [Gradle](https://gradle.org/), you will find that this project is already configured to build with Gradle Wrapper.
+The `.devcontainer` folder contains config. to setup a building Docker container -- you can also refer to the scripts inside to build your own env.
+
+### Build with the Gradle Wrapper
+
+The following tutorial assumes using the associated building container:
 ``` terminal
 |-[ubuntu@4f0ef90f2eed:/mnt/datastore/cowork/20_repo/mmd2html][]
 : ./gradlew build
 |-[2026-09-10T15:07:19+09:00][o][]
 ```
-
 This compiles the application, runs the JUnit tests, and creates `build/libs/mmd2html.jar`.
 Application distributions are under `build/distributions/` and compiled classes are under `build/classes/java/main/`.
-Use `./gradlew installDist` to create `build/install/mmd2html/bin/mmd2html`.
 
 Use `./gradlew test` to run the test task and its prerequisites.
 The test report is at `build/reports/tests/test/index.html`.
 
+### Build with plain JDK tools
 
-## Build with plain JDK tools
-
-The application source uses only JDK classes and classes in this repository.
-Gradle declares Guava, but the current application does not use it.
-With JDK 21, you can compile and package the application without Gradle or downloaded libraries:
-
+The following tutorial assumes using the associated building container:
 ``` terminal
 |-[ubuntu@4f0ef90f2eed:/mnt/datastore/cowork/20_repo/mmd2html][]
 : mkdir -p build/plain/classes
 : find src -name '*.java' -print > build/plain/sources.txt
 : javac --release 21 -encoding UTF-8 -d build/plain/classes @build/plain/sources.txt
-: jar --create --file build/plain/mmd2html.jar --main-class mmd2html.MmdConverter -C build/plain/classes .
+: jar --create --file build/plain/mmd2html.jar --main-class mmd2html.Converter -C build/plain/classes .
 |-[2026-09-10T15:07:19+09:00][o][]
 ```
-
 This builds only the application, without compiling or running the JUnit tests.
-Use the Gradle build to run the test suite with its test dependencies.
-The plain build output is separate from Gradle's output.
 
-## Input and usage
-
-The parser requires a header fenced with three backticks, all fields below, and a body starting with a level-one heading.
-Create a `build` directory and save this example as `build/sample.txt`:
-
-````text
-``` header
-@file: sample.txt
-@brief: A small conversion example.
-@title: Example
-@author: Example author
-@date: [created: 2026-09-09, updated: 2026-09-09]
-@version: 0.1.0
-```
-
-# Example
-
-This is a paragraph.
-
-## Code
-
-``` code
-System.out.println("Hello");
-```
-````
-
-After a Gradle build:
-
-```sh
-java -jar build/libs/mmd2html.jar build/sample.txt build/sample.html
-```
-
-After a plain JDK build:
-
-```sh
-java -jar build/plain/mmd2html.jar build/sample.txt build/sample.html
-```
-
-The output file is replaced if it exists, and its parent directory must already exist.
-Pass an empty second argument to write to standard output:
-
-```sh
-java -jar build/libs/mmd2html.jar build/sample.txt ""
-```
-
-The CLI currently accepts either zero arguments or exactly two arguments.
-A single input argument fails, even though the built-in usage message marks the output argument as optional.
-With no arguments, it prompts for the input path and then the output path.
-Press Enter at the output prompt to write HTML to standard output.
-
-```sh
-java -jar build/libs/mmd2html.jar
-```
-
-You can also run the compiled classes directly:
-
-```sh
-java -cp build/classes/java/main mmd2html.MmdConverter build/sample.txt build/sample.html
-```
+## Usage
 
 For Gradle execution, supply both paths relative to the repository root:
-
-```sh
-./gradlew run --args="build/sample.txt build/sample.html"
+``` cmd
+./gradlew run --args="examples/example-input.txt examples/example-output.html"
 ```
 
-Direct `java` commands resolve paths from the shell's working directory.
-Use direct `java` execution for interactive input.
+Or, after a plain JDK build:
+``` cmd
+java -jar build/plain/mmd2html.jar examples/example-input.txt examples/example-output.html
+```
+You can also run the compiled classes directly:
+``` cmd
+java -cp build/classes/java/main mmd2html.Converter build/sample.txt build/sample.html
+```
+Note, direct `java` commands resolve paths from the shell's working directory.
 
-## Repository structure
+The CLI currently accepts either zero arguments or exactly two arguments.
+With no arguments, it prompts for the input path and then the output path.
 
-``` tree
-mmd2html/
-|- src/
-|  |- mmd2html/             # package mmd2html
-|  |  |- MmdConverter.java
-|  |  |- ast/               # package mmd2html.ast
-|  |  |  |- blocks/         # package mmd2html.ast.blocks
-|  |  |- util/              # package mmd2html.util
-|- test/
-|  |- mmd2html/
-|  |  |- ast/
-|  |  |  |- blocks/
-|- build/                   # auto-generated and ignored
-|- build.gradle.kts
-|- settings.gradle.kts
-|- gradle/
-|- gradlew
-|- docs/
+## Test
+
+The tests use JUnit 5 (Jupiter) framework as configured in the project's `build.gradle.kts`.
+
+To run all tests, use the following command from the repository root:
+``` bash
+./gradlew test
 ```
 
-The repository is a Gradle project with application sources in `src/` and tests in `test/`.
-Java packages are `mmd2html`, `mmd2html.ast`, `mmd2html.ast.blocks`, and `mmd2html.util`.
-The folder path under `src/` and `test/` mirrors the package name, see `docs/package-layout.md`.
-The entry point is `mmd2html.MmdConverter`.
+`MmdDocSection` is tested with files under `test/mmd2html/testcases/`.
+Each `\d{2}-<name>.txt` is one input, and starts with a MetaInfo block (`file`, `brief`, `details`, etc.) that describes the case.
+The actual output goes to `build/test-output/\d{2}-<name>.html`.
 
-## Earlier design notes
+The sibling `\d{2}-<name>.html` in `test/mmd2html/testcases` is the benchmark, which *should be written by hand* -- yes, in the sense that test should be treated more seriously.
+Since `mmd2html` does not by itself generate a full HTML page, a template file `html-article-template.html` is placed in `test/mmd2html/misc/` to help constructing the test case as a valid page for intuitive visual inspection.
+The expected output should be inserted between `<!-- @ARTICLE:BEGIN -->` and `<!-- @ARTICLE:END -->` marks of the template.
 
-The notes below are retained as design discussion, rather than a list of implemented features.
-
-## Method (TODO: need formalization)
+## Method (@todo this is early design notes, need formalization)
 
 === AST approach
 

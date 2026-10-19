@@ -1,0 +1,31 @@
+---
+file: 07-em-dash.txt
+brief: Test mmd with em dash.
+details: In headings, paragraph and list blocks, a spaced ` -- ` and an unspaced `---` both become an em dash, without spaces. Two hyphens without spaces stay, and a code block keeps its text as it is.
+note: The text contains excerpts from "Miguel de Cervantes, *Don Quixote* (1605, 1615)" and "Herman Melville, *Moby-Dick* (1851)".
+---
+
+# Em dash
+
+## In a paragraph
+
+In a village of La Mancha -- the name of which I have no desire to call to mind -- there lived a gentleman.
+He was of a hardy habit---spare, gaunt-featured---a very early riser and a great sportsman.
+
+## In a list
+
+The mates of the Pequod:
+- Starbuck -- the chief mate,
+- Stubb---the second mate,
+  - with his pipe -- even in a storm.
+
+## In a heading -- like this one
+
+The heading above has a spaced em dash.
+
+## Not an em dash
+
+Run `ls --all` to see the hidden files, and read pages 1--2.
+``` text
+a---b -- c
+```

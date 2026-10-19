@@ -1,11 +1,11 @@
 /**
- * @file: ParagraphBlock.java
- * @brief: Represents a plain paragraph block in the document.
- * @author: madpang
- * @date: [created: 2025-06-09, updated: 2025-07-11]
- * @note:
- * ParagraphBlock is a *special* block in terms of parsing --- it is the fallback block type that captures any non-empty content.
- * It does NOT provide a static `parse` method to read from a text stream and return an instance, instead, it should be controlled carefully by its caller---the SemanticParagraph class.
+ * @file ParagraphBlock.java
+ * @brief Represents a plain paragraph block in the document.
+ * @author [madpang, t-tang-rfc]
+ * @date [created: 2025-06-09, updated: 2025-10-14]
+ * 
+ * @details ParagraphBlock is a *special* block in terms of parsing -- it is the fallback block type that captures any non-empty content.
+ * @details It does NOT provide a static `parse` method that return an instance by reading from a text stream, instead, it should be controlled carefully by its caller -- the SemanticParagraph class.
  */
 
 package mmd2html.ast.blocks;
@@ -17,33 +17,26 @@ import java.util.List;
 import mmd2html.util.CommonUtil;
 
 public final class ParagraphBlock implements IBlock {
-	// Self-identifying
-	public static final String BLOCK_TYPE = "paragraph";
-	// Sentence lines of the paragraph
+	// Instance member(s)
 	private List<String> sentenceLines = new ArrayList<>();
 
 	/* Default implicit constructor */
 
 	/* Interface behavior --------------------------------------------------- */
 	@Override
-	public String getType() {
-		return BLOCK_TYPE;
+	public String getTypeName() {
+		return "paragraph";
 	}
 
 	@Override
 	public List<String> toHTML() throws IOException {
-		if (sentenceLines.isEmpty()) {
-			throw new IOException("[ERROR] ParagraphBlock contains no lines to convert to HTML.");
-		}
-
 		List<String> htmlLines = new ArrayList<>();
 		htmlLines.add("<p>");
 		for (String line : sentenceLines) {
-			// Escape HTML for each line
-			htmlLines.add(CommonUtil.escapeHTML(line));
+			// Escape HTML for each line, then convert em dashes
+			htmlLines.add(CommonUtil.convertEmDash(CommonUtil.escapeHTML(line)));
 		}
 		htmlLines.add("</p>");
-
 		return htmlLines;
 	}
 

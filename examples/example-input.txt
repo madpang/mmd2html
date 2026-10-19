@@ -1,11 +1,10 @@
-``` header
-@file: example-mmd-doc.txt
-@brief: A blank article serving as a boilerplate.
-@title: A wonderful article
-@author: madpang
-@date: [created: 2025-05-11, updated: 2025-09-10]
-@version: 0.1.0
-```
+---
+file: example-mmd-doc.txt
+brief: A blank article serving as a boilerplate.
+author: madpang
+date: [created: 2025-05-11, updated: 2025-09-10]
+version: 0.1.0
+---
 
 # First Level Heading
 
@@ -45,3 +44,8 @@ This section is be the member of the first level section.
 === Fuzzy major heading
 
 --- Fuzzy minor heading
+
+---
+A meta info block can hold arbitrary content that is *invisible* to the HTML output.
+A MetaInfoBlock is basically a SemanticParagraph.
+---

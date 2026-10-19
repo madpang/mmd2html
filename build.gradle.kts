@@ -34,14 +34,14 @@ java {
 
 application {
     // Define the main class for the application.
-    mainClass = "mmd2html.MmdConverter"
+    mainClass = "mmd2html.Converter"
 }
 
 tasks.named<Jar>("jar") {
     archiveBaseName = "mmd2html"
     manifest {
         attributes(
-            "Main-Class" to "mmd2html.MmdConverter"
+            "Main-Class" to "mmd2html.Converter"
         )
     }
 }
@@ -49,6 +49,8 @@ tasks.named<Jar>("jar") {
 tasks.named<Test>("test") {
     // Use JUnit Platform for unit tests.
     useJUnitPlatform()
+    // Test data files are read at run time; a change in them must rerun the tests.
+    inputs.dir("test/mmd2html/testcases")
 }
 
 // Keep application sources and tests in separate top-level directories.

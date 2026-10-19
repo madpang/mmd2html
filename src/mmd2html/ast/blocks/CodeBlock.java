@@ -1,13 +1,14 @@
 /**
- * @file: CodeBlock.java
- * @brief: Represents a fenced code block in the document.
- * @author: madpang
- * @date: [created: 2025-06-09, updated: 2026-04-19]
+ * @file CodeBlock.java
+ * @brief Represents a fenced code block in the document.
+ * @author [madpang, t-tang-rfc, claude]
+ * @date [created: 2025-06-09, updated: 2026-10-14]
+ * 
+ * @details A code block is started with "``` <string-without-whitespace>" (e.g. "``` java") to indicate the code type, and it ends with EXACTLY "```".
  */
 
 package mmd2html.ast.blocks;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.List;
 import java.util.ArrayList;
@@ -16,38 +17,21 @@ import java.util.regex.Matcher;
 import java.util.Optional;
 
 import mmd2html.util.CommonUtil;
+import mmd2html.util.LineCursor;
 
 public final class CodeBlock implements IBlock {
-	// Self-identifying
-	public static final String BLOCK_TYPE = "code";
-	/**
-	 * @note:
-	 * A code block is started with "``` <string-without-whitespace>" (e.g. "``` java") to indicate the code type,;
-	 * and it ends with with EXACTLY "```".
-	 */
-	public static final String FENCE_LINE = "```";
-	// Code type
-	private final String codeType; // e.g. "java", "python", etc.
-	// Real content of the code block.
-	private List<String> codeLines;
+	// Instance member(s)
+	private List<String> codeLines = new ArrayList<>();
+	private String codeType = null; // e.g. "java", "python", etc.	
 
-	/* Constructor (accessible only within the same package, for test) ------ */
-	CodeBlock(List<String> contentLines, String fenceTag) {
-		this.codeType = fenceTag;
-		this.codeLines = contentLines;
-	}
-
-	/* Interface behavior --------------------------------------------------- */
 	@Override
-	public String getType() {
-		return BLOCK_TYPE;
+	public String getTypeName() {
+		return "code";
 	}
 
 	@Override
 	public List<String> toHTML() throws IOException {
-		if (codeLines.isEmpty()) {
-			throw new IOException("[WARNING] CodeBlock contains no lines to convert to HTML.");
-		}
+		// An empty code block gives an empty <pre>, like an empty MetaInfo block is allowed.
 		List<String> htmlLines = new ArrayList<>();
 		htmlLines.add("<pre>");
 		for (String line : codeLines) {
@@ -57,36 +41,40 @@ public final class CodeBlock implements IBlock {
 		return htmlLines;
 	}
 
-	/* Instance behavior --------------------------------------------------- */
-	String getCodeType() {
+	public String getCodeType() {
 		return codeType;
 	}
 
-	/* Static factory / parser --------------------------------------------- */
-	public static Optional<IBlock> parse(BufferedReader reader, String firstLine) throws IOException {
-		Pattern codeBlockStart = Pattern.compile("^`{3} (\\S+)$");
-		Matcher matcher = codeBlockStart.matcher(firstLine);
+	/** 
+	 * @brief Static factory / parser
+	 * @details A non-match leaves the cursor untouched;
+	 * @details success consumes both fences, or everything up to EOF without a closing fence.
+	 */
+	public static Optional<IBlock> parse(LineCursor cursor) throws IOException {
+		Matcher matcher = getCodeBlockOpeningPattern().matcher(cursor.peek());
 		if (!matcher.matches()) {
 			return Optional.empty();
 		}
-		// Retrieve the code type
-		String tag = matcher.group(1);
-		// Collect the actual code block content
-		List<String> content = new ArrayList<>();
-		String currentLine = reader.readLine();
-		while ((currentLine != null && !currentLine.equals(FENCE_LINE))) {
-			content.add(currentLine);
-			currentLine = reader.readLine();
+		// Code block opening found
+		CodeBlock block = new CodeBlock();
+		block.codeType = matcher.group(1);
+		cursor.next();
+		// Parse the code block content until the closing fence is found.
+		String closingFence = getCodeBlockFence();
+		String currentLine = null;
+		while ((currentLine = cursor.next()) != null && !currentLine.equals(closingFence)) {
+			block.codeLines.add(currentLine);
 		}
-		if (content.isEmpty()) {
-			throw new IOException("[ERROR] Empty code block is not allowed!");
-		}
-		if (currentLine == null) {
-			throw new IOException("[ERROR] Unterminated code fence!");
-		}
-		return Optional.of(new CodeBlock(content, tag));
+		return Optional.of(block);
 	}
 
-	/* Static parser object to register globally --------------------------- */
-	public static final BlockParser PARSER = CodeBlock::parse;
+	// --- Private Utility Functions
+	private static String getCodeBlockFence() {
+		return "```";
+	}
+
+	private static Pattern getCodeBlockOpeningPattern() {
+		String openingRegex = "^" + getCodeBlockFence() + " (\\S+)$";
+		return Pattern.compile(openingRegex);
+	}
 }

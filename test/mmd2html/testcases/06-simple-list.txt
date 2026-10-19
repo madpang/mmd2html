@@ -1,0 +1,34 @@
+---
+file: 06-simple-list.txt
+brief: Test mmd with simple lists.
+details: A level-1 list starts at column one; a nested list has more leading spaces than its parent. `1.` style numbers make an ordered list, `-` an unordered one. At most two levels. A line that is not a list item ends the list.
+note: The second section contains excerpts from "Herman Melville, *Moby-Dick* (1851)".
+---
+
+# Simple lists
+
+## Ordered list with a nested unordered list
+
+Ensure the VM is powered off, then:
+1. Open **virt-manager**,
+2. Select the VM and open **Details**,
+3. Click **Memory** tab,
+4. Enable **Shared memory** checkbox,
+5. Apply changes;
+6. Click **Add Hardware** button -> select **Filesystem**,
+7. Configure:
+   - **Driver:** `virtiofs`
+   - **Source path:** `/mnt/datastore`
+   - **Target path:** `datastore`
+   - **Access mode:** `Passthrough`
+8. Apply changes.
+
+## Unordered list with a nested ordered list
+
+The boats of the Pequod are lowered:
+- Starbuck's boat, with
+  1. Queequeg at the bow,
+  2. Starbuck at the steering oar.
+- Stubb's boat, with Tashtego.
+- Flask's boat, with Daggoo.
+Ahab keeps his own boat.
