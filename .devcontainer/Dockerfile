@@ -1,9 +1,9 @@
 # syntax=docker/dockerfile:1
 # /////////////////////////////////////////////////////////////
-# @file: Dockerfile
-# @brief: Set up the dev. env. for mmd2html build toolchain.
-# @author: [t-tang-rfc]
-# @date: [created: 2026-09-06, updated: 2026-09-10]
+# @file Dockerfile
+# @brief Set up the dev. env. for mmd2html build toolchain.
+# @author [t-tang-rfc]
+# @date [created: 2026-09-06, updated: 2026-09-10]
 # /////////////////////////////////////////////////////////////
 
 # === Use an official Ubuntu 24.04 (noble numbat) as a base image 

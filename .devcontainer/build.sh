@@ -1,10 +1,11 @@
 #!/bin/bash
 # ////////////////////////////////////////////////////////////////
-# @file: build.sh
-# @brief: Build the devcontainer image
-# @author: [t-tang-rfc]
-# @date: [created: 2026-09-06, updated: 2026-09-06]
-# @usage: ./build.sh
+# @file build.sh
+# @brief Build the docker image, if you are NOT utilizing the Development Containers facility.
+# @see [Development Containers](https://containers.dev/)
+# @author [t-tang-rfc]
+# @date [created: 2026-09-06, updated: 2026-09-06]
+# @usage ./build.sh
 # ////////////////////////////////////////////////////////////////
 
 set -euo pipefail

@@ -22,7 +22,7 @@ However, it might be interpreted as *Modified Markdown Document* or *Minimal Mar
 The following ASCII graph depicts the structure of this repo.:
 ``` tree
 mmd2html/
-|- README.txt                          # This doc
+|- README.txt                          # *this* doc
 |- docs/
 |- src/
 |  |- mmd2html/
@@ -55,17 +55,17 @@ mmd2html/
 
 mmd2html is a simple Java project, which you can build with plain JDK tools.
 Or, if you are familiar with [Gradle](https://gradle.org/), you will find that this project is already configured to build with Gradle Wrapper.
-The `.devcontainer` folder contains config. to setup a building Docker container -- you can also refer to the scripts inside to build your own env.
+The `.devcontainer` folder contains everything necessary to setup a Docker container -- you can also refer to the scripts there to build your own environment.
 
 ### Build with the Gradle Wrapper
 
-The following tutorial assumes using the associated building container:
+The following tutorial assumes using the associated Dev Container:
 ``` terminal
 |-[ubuntu@4f0ef90f2eed:/mnt/datastore/cowork/20_repo/mmd2html][]
 : ./gradlew build
 |-[2026-09-10T15:07:19+09:00][o][]
 ```
-This compiles the application, runs the JUnit tests, and creates `build/libs/mmd2html.jar`.
+The comand compiles the application, runs the JUnit tests, and creates `build/libs/mmd2html.jar`.
 Application distributions are under `build/distributions/` and compiled classes are under `build/classes/java/main/`.
 
 Use `./gradlew test` to run the test task and its prerequisites.
@@ -73,7 +73,7 @@ The test report is at `build/reports/tests/test/index.html`.
 
 ### Build with plain JDK tools
 
-The following tutorial assumes using the associated building container:
+The following tutorial also assumes using the associated Dev Container:
 ``` terminal
 |-[ubuntu@4f0ef90f2eed:/mnt/datastore/cowork/20_repo/mmd2html][]
 : mkdir -p build/plain/classes
@@ -82,7 +82,7 @@ The following tutorial assumes using the associated building container:
 : jar --create --file build/plain/mmd2html.jar --main-class mmd2html.Converter -C build/plain/classes .
 |-[2026-09-10T15:07:19+09:00][o][]
 ```
-This builds only the application, without compiling or running the JUnit tests.
+The commands only build the application, without compiling or running the JUnit tests.
 
 ## Usage
 
@@ -114,10 +114,9 @@ To run all tests, use the following command from the repository root:
 ```
 
 `MmdDocSection` is tested with files under `test/mmd2html/testcases/`.
-Each `\d{2}-<name>.txt` is one input, and starts with a MetaInfo block (`file`, `brief`, `details`, etc.) that describes the case.
+Each `\d{2}-<name>.txt` is one input, and starts with a MetaInfo block (`file`, `brief`, `details`, etc.) that describes the test case.
 The actual output goes to `build/test-output/\d{2}-<name>.html`.
-
-The sibling `\d{2}-<name>.html` in `test/mmd2html/testcases` is the benchmark, which *should be written by hand* -- yes, in the sense that test should be treated more seriously.
+The sibling `\d{2}-<name>.html` in `test/mmd2html/testcases` is the benchmark, which *should be written by hand* -- yes, in the sense that *THE TEST* should be treated more seriously.
 Since `mmd2html` does not by itself generate a full HTML page, a template file `html-article-template.html` is placed in `test/mmd2html/misc/` to help constructing the test case as a valid page for intuitive visual inspection.
 The expected output should be inserted between `<!-- @ARTICLE:BEGIN -->` and `<!-- @ARTICLE:END -->` marks of the template.
 

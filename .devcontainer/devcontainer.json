@@ -1,10 +1,13 @@
 {
-	"name": "mmd2html",
-	"image": "mmd2html-dev:latest",
+	"name": "mmd2html-dev",
+	"build": {
+		"dockerfile": "Dockerfile",
+		"context": "."
+	},
 	"runArgs": [
 		"--mount", "type=bind,src=${localEnv:HOME}/.gnupg,dst=/home/ubuntu/.gnupg,readonly",
 		"--mount", "type=bind,src=/run/user/1000/gnupg,dst=/run/user/1000/gnupg,readonly"
-	],	
+	],
 	"workspaceMount": "type=bind,src=${localWorkspaceFolder},target=/mnt/datastore/cowork/20_repo/${localWorkspaceFolderBasename}",
 	"workspaceFolder": "/mnt/datastore/cowork/20_repo/${localWorkspaceFolderBasename}",
 	"customizations": {

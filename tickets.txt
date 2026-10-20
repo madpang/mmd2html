@@ -4,11 +4,9 @@ file: tickets.txt
 
 === Ticket 1
 
----
-brief: Support fuzzy heading parsing.
-status: DONE
-date: [created: 2025-07-04, updated: 2026-10-05]
----
+@brief Support fuzzy heading parsing.
+@status DONE
+@date [created: 2025-07-04, updated: 2026-10-05]
 
 @details
 The mmd doc is designed to only support 3 explicit heading levels:
@@ -23,11 +21,9 @@ Fuzzy headings are regarded as coming *after* an explicit heading -- therefore, 
 
 === Ticket 2
 
----
-brief: Parse semantic paragraph into <p> and <pre> tags.
-status: DONE
-date: [created: 2025-07-04, updated: 2025-07-12]
----
+@brief Parse semantic paragraph into <p> and <pre> tags.
+@status DONE
+@date: [created: 2025-07-04, updated: 2025-07-12]
 
 @details
 Currently, the mmd doc is only parsed into sections, and blocks of text delimited by blank lines are treated as semantic paragraphs.
@@ -36,11 +32,9 @@ The first step towards a full-fledged mmd doc parser is to parse semantic paragr
 
 === Ticket 3
 
----
-brief: Add unit tests for the parser.
-status: TODO
-date: [created: 2025-07-04, updated: 2025-07-04]
----
+@brief Add unit tests for the parser.
+@status TODO
+@date [created: 2025-07-04, updated: 2025-07-04]
 
 @details
 After careful consideration, I choose Java to implement the mmd doc parser, succeeding the initial trial in PowerShell.
@@ -48,44 +42,36 @@ I would like to develop the parser in a formal way, with sufficient unit tests.
 
 === Ticket 4
 
----
-brief: Setup a CI pipeline for this project.
-status: DONE
-date: [created: 2025-07-04, updated: 2025-07-12]
----
+@brief Setup a CI pipeline for this project.
+@status DONE
+@date [created: 2025-07-04, updated: 2025-07-12]
 
 @details
 This project relies on Gradle for build and test, so I have set up a GitHub Actions workflow to run the Gradle build and test tasks on every push and pull request.
 
 === Ticket 5
 
----
-brief: Investigate deployment options for this project.
-status: TODO
-date: [created: 2025-07-04, updated: 2025-07-04]
----
+@brief Investigate deployment options for this project.
+@status TODO
+@date [created: 2025-07-04, updated: 2025-07-04]
 
 @details
 Currently, the mmd doc parser is invoked using `java` command line, maybe I should consider making it a standalone executable or a web service.
 
 === Ticket 6
 
----
-brief: Formalize the README file for this project.
-status: TODO
-date: [created: 2025-07-04, updated: 2025-07-04]
----
+@brief Formalize the README file for this project.
+@status TODO
+@date [created: 2025-07-04, updated: 2025-07-04]
 
 @details
 Current README file is just a draft, I should formalize it with proper sections and content.
 
 === Ticket 7
 
----
-brief: Improve semantic paragraph parsing for lists.
-status: TODO
-date: [created: 2025-07-12, updated: 2025-07-12]
----
+@brief Improve semantic paragraph parsing for lists.
+@status DONE
+@date [created: 2025-07-12, updated: 2026-10-20]
 
 @details
 Currently, the semantic paragraph handles code block, and all other text is treated as plain paragraph.
