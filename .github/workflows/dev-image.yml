@@ -29,6 +29,7 @@ jobs:
         (github.event_name == 'push' && github.ref_name == github.event.repository.default_branch)
       )
     runs-on: ubuntu-24.04
+    timeout-minutes: 10
     permissions:
       contents: read
       packages: write
@@ -80,6 +81,7 @@ jobs:
       ${{ !cancelled() && github.repository == 'madpang/mmd2html' &&
       (needs.build-and-push.result == 'success' || github.event_name == 'schedule') }}
     runs-on: ubuntu-24.04
+    timeout-minutes: 10
     permissions:
       packages: write
 

@@ -18,6 +18,7 @@ jobs:
   native:
     if: github.repository == 'madpang/mmd2html'
     runs-on: ubuntu-24.04
+    timeout-minutes: 10
     permissions:
       contents: read
       packages: read
@@ -39,8 +40,9 @@ jobs:
       run: ./gradlew nativeCompile
 
     - name: Package
+      env:
+        ASSET: ${{ env.PACKAGE_NAME }}.tar.gz
       run: |
-        ASSET="$PACKAGE_NAME.tar.gz"
         mkdir -p build/package
         tar -C build/native/nativeCompile -czf "build/package/$ASSET" mmd2html
         (cd build/package && sha256sum "$ASSET" > "$ASSET.sha256")
@@ -58,6 +60,7 @@ jobs:
     needs: native
     if: startsWith(github.ref, 'refs/tags/v')
     runs-on: ubuntu-24.04
+    timeout-minutes: 10
     permissions:
       contents: write
 
@@ -72,8 +75,8 @@ jobs:
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         GH_REPO: ${{ github.repository }}
         TAG: ${{ github.ref_name }}
+        ASSET: ${{ env.PACKAGE_NAME }}.tar.gz
       run: |
-        ASSET="$PACKAGE_NAME.tar.gz"
         if gh release view "$TAG" > /dev/null 2>&1; then
           gh release upload "$TAG" "$ASSET" "$ASSET.sha256" --clobber
         else
