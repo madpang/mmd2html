@@ -9,12 +9,6 @@ on:
     paths:
       - '.devcontainer/**'
       - '.github/workflows/dev-image.yml'
-  # @todo TEMPORARY: bootstrap the image from a pull request, since `workflow_dispatch` is only offered on the default branch.
-  # Revert this trigger before the final merge.
-  pull_request:
-    paths:
-      - '.devcontainer/**'
-      - '.github/workflows/dev-image.yml'
   workflow_dispatch:
   # Weekly sweep, so that image versions expire even when .devcontainer does not change.
   schedule:
@@ -29,13 +23,10 @@ jobs:
   build-and-push:
     # Publish from the default branch only; a push on any other branch is ignored.
     # Publish from the upstream repository only, so forks do not push images of their own.
-    # @todo TEMPORARY: also publish from a pull request to the default branch, opened from a branch of the upstream repository.
     if: >-
       github.repository == 'madpang/mmd2html' && (
         github.event_name == 'workflow_dispatch' ||
-        (github.event_name == 'push' && github.ref_name == github.event.repository.default_branch) ||
-        (github.event_name == 'pull_request' && github.base_ref == github.event.repository.default_branch &&
-          github.event.pull_request.head.repo.full_name == github.repository)
+        (github.event_name == 'push' && github.ref_name == github.event.repository.default_branch)
       )
     runs-on: ubuntu-24.04
     permissions:
