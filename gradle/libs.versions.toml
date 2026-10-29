@@ -4,7 +4,11 @@
 [versions]
 guava = "33.4.5-jre"
 junit-jupiter = "5.12.1"
+graalvm-buildtools = "1.1.17"
 
 [libraries]
 guava = { module = "com.google.guava:guava", version.ref = "guava" }
 junit-jupiter = { module = "org.junit.jupiter:junit-jupiter", version.ref = "junit-jupiter" }
+
+[plugins]
+graalvm-native = { id = "org.graalvm.buildtools.native", version.ref = "graalvm-buildtools" }
