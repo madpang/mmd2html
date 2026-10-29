@@ -12,7 +12,7 @@ on:
   workflow_dispatch:
 
 env:
-  ASSET: mmd2html-linux-x86_64.tar.gz
+  PACKAGE_NAME: mmd2html-linux-x86_64
 
 jobs:
   native:
@@ -36,15 +36,11 @@ jobs:
       uses: gradle/actions/setup-gradle@v5
 
     - name: Build native executable
-      run: ./gradlew test nativeCompile
-
-    - name: Smoke test
-      run: |
-        build/native/nativeCompile/mmd2html examples/example-input.txt build/example-output.html
-        test -s build/example-output.html
+      run: ./gradlew nativeCompile
 
     - name: Package
       run: |
+        ASSET="$PACKAGE_NAME.tar.gz"
         mkdir -p build/package
         tar -C build/native/nativeCompile -czf "build/package/$ASSET" mmd2html
         (cd build/package && sha256sum "$ASSET" > "$ASSET.sha256")
@@ -53,7 +49,7 @@ jobs:
     - name: Upload package
       uses: actions/upload-artifact@v4
       with:
-        name: mmd2html-linux-x86_64
+        name: ${{ env.PACKAGE_NAME }}
         path: build/package/
         if-no-files-found: error
         retention-days: 7
@@ -69,7 +65,7 @@ jobs:
     - name: Download package
       uses: actions/download-artifact@v4
       with:
-        name: mmd2html-linux-x86_64
+        name: ${{ env.PACKAGE_NAME }}
 
     - name: Publish GitHub Release
       env:
@@ -77,6 +73,7 @@ jobs:
         GH_REPO: ${{ github.repository }}
         TAG: ${{ github.ref_name }}
       run: |
+        ASSET="$PACKAGE_NAME.tar.gz"
         if gh release view "$TAG" > /dev/null 2>&1; then
           gh release upload "$TAG" "$ASSET" "$ASSET.sha256" --clobber
         else

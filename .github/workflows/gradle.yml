@@ -5,14 +5,13 @@
 name: Java CI with Gradle
 
 on:
-  push:
   pull_request:
   workflow_dispatch:
 
 jobs:
   build:
-    # Run on pushes to the default branch, and on pull requests to any branch.
-    if: github.event_name != 'push' || github.ref_name == github.event.repository.default_branch
+    # Run on pull requests to the default branch, and on manual dispatch.
+    if: github.event_name != 'pull_request' || github.base_ref == github.event.repository.default_branch
     runs-on: ubuntu-24.04
     permissions:
       contents: read
@@ -48,7 +47,8 @@ jobs:
   dependency-submission:
     # Generates and submits a dependency graph, enabling Dependabot Alerts for all project dependencies.
     # See: https://github.com/gradle/actions/blob/main/dependency-submission/README.md
-    if: github.event_name == 'push' && github.ref_name == github.event.repository.default_branch
+    # Only a manual run on the default branch submits, so the graph reflects the default branch.
+    if: github.event_name == 'workflow_dispatch' && github.ref_name == github.event.repository.default_branch
     runs-on: ubuntu-24.04
     permissions:
       contents: write

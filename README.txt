@@ -126,7 +126,7 @@ The workflows under `.github/workflows/` all run inside the Dev Container image,
 - `dev-image.yml` builds `.devcontainer/Dockerfile` and pushes it to `ghcr.io/madpang/mmd2html/mmd2html-dev`.
   It runs when `.devcontainer/` changes on the default branch, or on manual dispatch.
   Image versions older than 90 days are deleted, except the one tagged `latest`.
-- `gradle.yml` runs `./gradlew build` on pushes to the default branch and on pull requests.
+- `gradle.yml` runs `./gradlew build` on pull requests to the default branch, and on manual dispatch.
 - `deliver.yml` runs `./gradlew nativeCompile` when a `v*` tag is pushed, and attaches the executable to the GitHub Release of that tag.
 
 Image publishing and release delivery run in `madpang/mmd2html` only; forks reuse the upstream image.
