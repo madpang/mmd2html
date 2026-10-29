@@ -8,6 +8,8 @@
 plugins {
     // Apply the application plugin to add support for building a CLI application in Java.
     application
+    // Build a standalone native executable with GraalVM Native Image (`./gradlew nativeCompile`).
+    alias(libs.plugins.graalvm.native)
 }
 
 repositories {
@@ -43,6 +45,15 @@ tasks.named<Jar>("jar") {
         attributes(
             "Main-Class" to "mmd2html.Converter"
         )
+    }
+}
+
+graalvmNative {
+    binaries {
+        named("main") {
+            imageName = "mmd2html"
+            mainClass = "mmd2html.Converter"
+        }
     }
 }
 
