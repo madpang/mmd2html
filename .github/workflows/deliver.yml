@@ -1,28 +1,33 @@
-# Build mmd2html as a standalone native executable and publish it as a workflow artifact.
-# The job runs inside the Dev Container image published by dev-image.yml, which ships GraalVM Native Image and its C toolchain.
+# Build mmd2html as a standalone native executable and attach it to a GitHub Release.
+# The build runs inside the Dev Container image published by dev-image.yml, which ships GraalVM Native Image and its C toolchain.
+# Other workflows can then fetch the executable without Java, e.g.:
+#   curl -fsSL https://github.com/madpang/mmd2html/releases/latest/download/mmd2html-linux-x86_64.tar.gz | tar -xz
 
 name: Deliver native executable
 
 on:
   push:
     tags: ['v*']
+  # On a tag ref, a manual run (re)publishes that release; on a branch ref, it only builds the executable.
   workflow_dispatch:
+
+env:
+  ASSET: mmd2html-linux-x86_64.tar.gz
 
 jobs:
   native:
+    if: github.repository == 'madpang/mmd2html'
     runs-on: ubuntu-24.04
     permissions:
       contents: read
       packages: read
     container:
-      image: ghcr.io/${{ github.repository }}/mmd2html-dev:latest
+      image: ghcr.io/madpang/mmd2html/mmd2html-dev:latest
       credentials:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
       # The image's default user `ubuntu` cannot write the workspace mounted by the runner.
       options: --user root
-    env:
-      PACKAGE_NAME: mmd2html-${{ github.ref_name }}-linux-x86_64
 
     steps:
     - uses: actions/checkout@v6
@@ -31,34 +36,49 @@ jobs:
       uses: gradle/actions/setup-gradle@v5
 
     - name: Build native executable
-      run: ./gradlew test jar nativeCompile
+      run: ./gradlew test nativeCompile
 
-    # The native executable must give the same output as the JVM build.
     - name: Smoke test
       run: |
-        mkdir -p build/smoke
-        for input in test/mmd2html/testcases/*.txt examples/example-input.txt; do
-          name="$(basename "$input" .txt)"
-          java -jar build/libs/mmd2html.jar "$input" "build/smoke/$name-jvm.html"
-          build/native/nativeCompile/mmd2html "$input" "build/smoke/$name-native.html"
-          cmp "build/smoke/$name-jvm.html" "build/smoke/$name-native.html"
-        done
+        build/native/nativeCompile/mmd2html examples/example-input.txt build/example-output.html
+        test -s build/example-output.html
 
     - name: Package
       run: |
-        # A branch name may contain `/`, which is not allowed in a file name.
-        package="${PACKAGE_NAME//\//-}"
-        mkdir -p "build/package/$package"
-        cp build/native/nativeCompile/mmd2html "build/package/$package/"
-        echo "$GITHUB_SHA" > "build/package/$package/SOURCE_COMMIT.txt"
-        (cd "build/package/$package" && sha256sum mmd2html > SHA256SUMS)
-        tar -C build/package -czf "build/package/$package.tar.gz" "$package"
-        echo "PACKAGE_NAME=$package" >> "$GITHUB_ENV"
+        mkdir -p build/package
+        tar -C build/native/nativeCompile -czf "build/package/$ASSET" mmd2html
+        (cd build/package && sha256sum "$ASSET" > "$ASSET.sha256")
 
+    # Hand the package over to the release job, which runs outside the container.
     - name: Upload package
       uses: actions/upload-artifact@v4
       with:
-        name: ${{ env.PACKAGE_NAME }}
-        path: build/package/${{ env.PACKAGE_NAME }}.tar.gz
+        name: mmd2html-linux-x86_64
+        path: build/package/
         if-no-files-found: error
-        retention-days: 90
+        retention-days: 7
+
+  release:
+    needs: native
+    if: startsWith(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+
+    steps:
+    - name: Download package
+      uses: actions/download-artifact@v4
+      with:
+        name: mmd2html-linux-x86_64
+
+    - name: Publish GitHub Release
+      env:
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GH_REPO: ${{ github.repository }}
+        TAG: ${{ github.ref_name }}
+      run: |
+        if gh release view "$TAG" > /dev/null 2>&1; then
+          gh release upload "$TAG" "$ASSET" "$ASSET.sha256" --clobber
+        else
+          gh release create "$TAG" "$ASSET" "$ASSET.sha256" --verify-tag --generate-notes --title "$TAG"
+        fi

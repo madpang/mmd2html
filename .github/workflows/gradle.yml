@@ -1,5 +1,6 @@
 # Build and test mmd2html with the Gradle Wrapper.
 # The jobs run inside the Dev Container image published by dev-image.yml, so CI uses the same GraalVM JDK as local development.
+# Forks also pull the upstream image, which must therefore be public.
 
 name: Java CI with Gradle
 
@@ -17,7 +18,7 @@ jobs:
       contents: read
       packages: read
     container:
-      image: ghcr.io/${{ github.repository }}/mmd2html-dev:latest
+      image: ghcr.io/madpang/mmd2html/mmd2html-dev:latest
       credentials:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
@@ -53,7 +54,7 @@ jobs:
       contents: write
       packages: read
     container:
-      image: ghcr.io/${{ github.repository }}/mmd2html-dev:latest
+      image: ghcr.io/madpang/mmd2html/mmd2html-dev:latest
       credentials:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
