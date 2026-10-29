@@ -3,7 +3,7 @@
 # @file Dockerfile
 # @brief Set up the dev. env. for mmd2html build toolchain.
 # @author [t-tang-rfc]
-# @date [created: 2026-09-06, updated: 2026-10-28]
+# @date [created: 2026-09-06, updated: 2026-10-29]
 # /////////////////////////////////////////////////////////////
 
 # === Use an official Ubuntu 24.04 (noble numbat) as a base image 
@@ -43,6 +43,7 @@ RUN <<-EOT
 	mkdir -p "$PD_JAVA_INSTALL_DIR"
 	curl -fL -o "/tmp/graalvm.tar.gz" "https://download.oracle.com/graalvm/25/latest/graalvm-jdk-25_linux-x64_bin.tar.gz"
 	tar -xzf "/tmp/graalvm.tar.gz" -C "$PD_JAVA_INSTALL_DIR" --strip-components=1
+	rm "/tmp/graalvm.tar.gz"
 EOT
 
 # --- Set up workspace for devcontainer
@@ -72,8 +73,9 @@ COPY --chmod=0600 "copy/config/default.ssh.config" "/tmp/default.ssh.config"
 RUN <<-EOT
 	[ -d "$PD_USER_HOME/.ssh" ] || mkdir "$PD_USER_HOME/.ssh"
 	chown "$PD_USER_NAME:$PD_USER_NAME" "$PD_USER_HOME/.ssh"
-	cp /tmp/default.ssh.config "$PD_USER_HOME/.ssh/config"
+	cp "/tmp/default.ssh.config" "$PD_USER_HOME/.ssh/config"
 	chown "$PD_USER_NAME:$PD_USER_NAME" "$PD_USER_HOME/.ssh/config"
+	rm "/tmp/default.ssh.config"
 EOT
 
 # Setup tmux
@@ -81,6 +83,7 @@ COPY --chmod=0644 "copy/config/default.tmux.config" "/tmp/default.tmux.config"
 RUN <<-EOT
 	cp "/tmp/default.tmux.config" "$PD_USER_HOME/.tmux.conf"
 	chown "$PD_USER_NAME:$PD_USER_NAME" "$PD_USER_HOME/.tmux.conf"
+	rm "/tmp/default.tmux.config"
 EOT
 
 # Setup GPG
@@ -94,9 +97,6 @@ EOT
 RUN <<-EOT
 	mkdir -p "$COWORK_DIR/20_repo/mmd2html"
 EOT
-
-# --- Clean up
-RUN rm -rf /tmp/*
 
 # === Launchpad
 
