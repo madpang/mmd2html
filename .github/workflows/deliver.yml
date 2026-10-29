@@ -1,0 +1,82 @@
+# Build mmd2html as a standalone native executable and attach it to a GitHub Release.
+# The build runs inside the Dev Container image published by dev-image.yml, which ships GraalVM Native Image and its C toolchain.
+# Other workflows can then fetch the executable without Java, e.g.:
+#   curl -fsSL https://github.com/madpang/mmd2html/releases/latest/download/mmd2html-linux-x86_64.tar.gz | tar -xz
+
+name: Deliver native executable
+
+on:
+  push:
+    tags: ['v*']
+  # On a tag ref publishes that release
+
+env:
+  PACKAGE_NAME: mmd2html-linux-x86_64
+
+jobs:
+  native:
+    if: github.repository == 'madpang/mmd2html'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      packages: read
+    container:
+      image: ghcr.io/madpang/mmd2html/mmd2html-dev:latest
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+      # The image's default user `ubuntu` cannot write the workspace mounted by the runner.
+      options: --user root
+
+    steps:
+    - uses: actions/checkout@v6
+
+    - name: Setup Gradle
+      uses: gradle/actions/setup-gradle@v5
+
+    - name: Build native executable
+      run: ./gradlew nativeCompile
+
+    - name: Package
+      env:
+        ASSET: ${{ env.PACKAGE_NAME }}.tar.gz
+      run: |
+        mkdir -p build/package
+        tar -C build/native/nativeCompile -czf "build/package/$ASSET" mmd2html
+        (cd build/package && sha256sum "$ASSET" > "$ASSET.sha256")
+
+    # Hand the package over to the release job, which runs outside the container.
+    - name: Upload package
+      uses: actions/upload-artifact@v4
+      with:
+        name: ${{ env.PACKAGE_NAME }}
+        path: build/package/
+        if-no-files-found: error
+        retention-days: 7
+
+  release:
+    needs: native
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    permissions:
+      contents: write
+
+    steps:
+    - name: Download package
+      uses: actions/download-artifact@v4
+      with:
+        name: ${{ env.PACKAGE_NAME }}
+
+    - name: Publish GitHub Release
+      env:
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GH_REPO: ${{ github.repository }}
+        TAG: ${{ github.ref_name }}
+        ASSET: ${{ env.PACKAGE_NAME }}.tar.gz
+      run: |
+        if gh release view "$TAG" > /dev/null 2>&1; then
+          gh release upload "$TAG" "$ASSET" "$ASSET.sha256" --clobber
+        else
+          gh release create "$TAG" "$ASSET" "$ASSET.sha256" --verify-tag --generate-notes --title "$TAG"
+        fi
