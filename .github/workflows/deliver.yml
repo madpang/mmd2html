@@ -1,0 +1,64 @@
+# Build mmd2html as a standalone native executable and publish it as a workflow artifact.
+# The job runs inside the Dev Container image published by dev-image.yml, which ships GraalVM Native Image and its C toolchain.
+
+name: Deliver native executable
+
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+
+jobs:
+  native:
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+      packages: read
+    container:
+      image: ghcr.io/${{ github.repository }}/mmd2html-dev:latest
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+      # The image's default user `ubuntu` cannot write the workspace mounted by the runner.
+      options: --user root
+    env:
+      PACKAGE_NAME: mmd2html-${{ github.ref_name }}-linux-x86_64
+
+    steps:
+    - uses: actions/checkout@v6
+
+    - name: Setup Gradle
+      uses: gradle/actions/setup-gradle@v5
+
+    - name: Build native executable
+      run: ./gradlew test jar nativeCompile
+
+    # The native executable must give the same output as the JVM build.
+    - name: Smoke test
+      run: |
+        mkdir -p build/smoke
+        for input in test/mmd2html/testcases/*.txt examples/example-input.txt; do
+          name="$(basename "$input" .txt)"
+          java -jar build/libs/mmd2html.jar "$input" "build/smoke/$name-jvm.html"
+          build/native/nativeCompile/mmd2html "$input" "build/smoke/$name-native.html"
+          cmp "build/smoke/$name-jvm.html" "build/smoke/$name-native.html"
+        done
+
+    - name: Package
+      run: |
+        # A branch name may contain `/`, which is not allowed in a file name.
+        package="${PACKAGE_NAME//\//-}"
+        mkdir -p "build/package/$package"
+        cp build/native/nativeCompile/mmd2html "build/package/$package/"
+        echo "$GITHUB_SHA" > "build/package/$package/SOURCE_COMMIT.txt"
+        (cd "build/package/$package" && sha256sum mmd2html > SHA256SUMS)
+        tar -C build/package -czf "build/package/$package.tar.gz" "$package"
+        echo "PACKAGE_NAME=$package" >> "$GITHUB_ENV"
+
+    - name: Upload package
+      uses: actions/upload-artifact@v4
+      with:
+        name: ${{ env.PACKAGE_NAME }}
+        path: build/package/${{ env.PACKAGE_NAME }}.tar.gz
+        if-no-files-found: error
+        retention-days: 90

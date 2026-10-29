@@ -120,6 +120,18 @@ The sibling `\d{2}-<name>.html` in `test/mmd2html/testcases` is the benchmark, w
 Since `mmd2html` does not by itself generate a full HTML page, a template file `html-article-template.html` is placed in `test/mmd2html/misc/` to help constructing the test case as a valid page for intuitive visual inspection.
 The expected output should be inserted between `<!-- @ARTICLE:BEGIN -->` and `<!-- @ARTICLE:END -->` marks of the template.
 
+## GitHub Actions
+
+The workflows under `.github/workflows/` all run inside the Dev Container image, so CI uses the same GraalVM JDK as local development.
+- `dev-image.yml` builds `.devcontainer/Dockerfile` and pushes it to `ghcr.io/<owner>/mmd2html/mmd2html-dev`.
+  It runs when `.devcontainer/` changes on the default branch, or on manual dispatch.
+  Image versions older than 90 days are deleted, except the one tagged `latest`.
+- `gradle.yml` runs `./gradlew build` on pushes to the default branch and on pull requests.
+- `deliver.yml` runs `./gradlew nativeCompile` when a `v*` tag is pushed, or on manual dispatch.
+  The executable is uploaded as a workflow artifact, kept for 90 days.
+
+Run `dev-image.yml` once by hand before the other two, so the image exists.
+
 ## Method (@todo this is early design notes, need formalization)
 
 === AST approach

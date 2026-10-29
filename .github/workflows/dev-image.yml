@@ -1,0 +1,98 @@
+# Build the Dev Container image and publish it to the GitHub Container Registry.
+# The CI and delivery workflows run their jobs inside this image.
+# Image: ghcr.io/<owner>/<repo>/mmd2html-dev:{latest,sha-<short>}
+
+name: Dev container image
+
+on:
+  push:
+    paths:
+      - '.devcontainer/**'
+      - '.github/workflows/dev-image.yml'
+  workflow_dispatch:
+  # Weekly sweep, so that image versions expire even when .devcontainer does not change.
+  schedule:
+    - cron: '0 3 * * 1'
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: mmd2html-dev
+  RETENTION_DAYS: 90
+
+jobs:
+  build-and-push:
+    # Publish from the default branch only; a push on any other branch is ignored.
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      (github.event_name == 'push' && github.ref_name == github.event.repository.default_branch)
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v6
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
+
+    - name: Log in to Container Registry
+      uses: docker/login-action@v3
+      with:
+        registry: ${{ env.REGISTRY }}
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Extract Metadata (tags, labels)
+      id: meta
+      uses: docker/metadata-action@v5
+      with:
+        images: ${{ env.REGISTRY }}/${{ github.repository }}/${{ env.IMAGE_NAME }}
+        tags: |
+          type=sha
+          type=raw,value=latest
+        labels: |
+          org.opencontainers.image.source=https://github.com/${{ github.repository }}
+
+    - name: Build & Push
+      uses: docker/build-push-action@v6
+      with:
+        context: .devcontainer
+        file: .devcontainer/Dockerfile
+        push: true
+        tags: ${{ steps.meta.outputs.tags }}
+        labels: ${{ steps.meta.outputs.labels }}
+        # Push a single plain manifest.
+        # With attestations, the image becomes an index whose untagged children the cleanup below would delete.
+        provenance: false
+        sbom: false
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
+
+  cleanup:
+    # Run after a publish, or alone on the weekly sweep.
+    needs: build-and-push
+    if: ${{ !cancelled() && (needs.build-and-push.result == 'success' || github.event_name == 'schedule') }}
+    runs-on: ubuntu-24.04
+    permissions:
+      packages: write
+
+    steps:
+    - name: Delete image versions older than ${{ env.RETENTION_DAYS }} days
+      env:
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        OWNER: ${{ github.repository_owner }}
+      run: |
+        scope="users/$OWNER"
+        if [ "$(gh api "/users/$OWNER" --jq .type)" = 'Organization' ]; then scope="orgs/$OWNER"; fi
+        package="${GITHUB_REPOSITORY#*/}/$IMAGE_NAME"
+        package="$(jq -rn --arg p "${package,,}" '$p | @uri')"
+        cutoff="$(date -u -d "$RETENTION_DAYS days ago" +%Y-%m-%dT%H:%M:%SZ)"
+        # The version tagged `latest` is always kept, however old it is.
+        gh api --paginate "/$scope/packages/container/$package/versions" \
+          --jq ".[] | select(.updated_at < \"$cutoff\") | select(.metadata.container.tags | index(\"latest\") | not) | .id" |
+        while read -r id; do
+          echo "Delete version $id"
+          gh api -X DELETE "/$scope/packages/container/$package/versions/$id"
+        done
