@@ -124,9 +124,9 @@ The expected output should be inserted between `<!-- @ARTICLE:BEGIN -->` and `<!
 
 The workflows under `.github/workflows/` all run inside the Dev Container image, so CI uses the same GraalVM JDK as local development.
 - `dev-image.yml` builds `.devcontainer/Dockerfile` and pushes it to `ghcr.io/madpang/mmd2html/mmd2html-dev`.
-  It runs when `.devcontainer/` changes on the default branch, or on manual dispatch.
-  Image versions older than 90 days are deleted, except the one tagged `latest`.
-- `gradle.yml` runs `./gradlew build` on pushes and pull requests to the default branch, and on manual dispatch.
+  It runs when `.devcontainer/` changes on the default branch.
+  A weekly scheduled run deletes image versions older than 90 days, except the one tagged `latest`.
+- `gradle.yml` runs `./gradlew build` on pushes and pull requests to the default branch.
 - `deliver.yml` runs `./gradlew nativeCompile` when a `v*` tag is pushed, and attaches the executable to the GitHub Release of that tag.
 
 Image publishing and release delivery run in `madpang/mmd2html` only; forks reuse the upstream image.
@@ -137,8 +137,6 @@ curl -fsSL https://github.com/madpang/mmd2html/releases/latest/download/mmd2html
 ./mmd2html input.txt output.html
 ```
 Replace `latest/download` with `download/<tag>` to pin a version.
-
-Run `dev-image.yml` once by hand before the other two, so the image exists.
 
 ## Method (@todo this is early design notes, need formalization)
 

@@ -8,8 +8,7 @@ name: Deliver native executable
 on:
   push:
     tags: ['v*']
-  # On a tag ref, a manual run (re)publishes that release; on a branch ref, it only builds the executable.
-  workflow_dispatch:
+  # On a tag ref publishes that release
 
 env:
   PACKAGE_NAME: mmd2html-linux-x86_64
@@ -58,7 +57,6 @@ jobs:
 
   release:
     needs: native
-    if: startsWith(github.ref, 'refs/tags/v')
     runs-on: ubuntu-24.04
     timeout-minutes: 10
     permissions:

@@ -9,7 +9,6 @@ on:
     paths:
       - '.devcontainer/**'
       - '.github/workflows/dev-image.yml'
-  workflow_dispatch:
   # Weekly sweep, so that image versions expire even when .devcontainer does not change.
   schedule:
     - cron: '0 3 * * 1'
@@ -25,8 +24,7 @@ jobs:
     # Publish from the upstream repository only, so forks do not push images of their own.
     if: >-
       github.repository == 'madpang/mmd2html' && (
-        github.event_name == 'workflow_dispatch' ||
-        (github.event_name == 'push' && github.ref_name == github.event.repository.default_branch)
+        github.event_name == 'push' && github.ref_name == github.event.repository.default_branch
       )
     runs-on: ubuntu-24.04
     timeout-minutes: 10
